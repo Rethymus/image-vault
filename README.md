@@ -68,7 +68,9 @@ The full admin workstation is the primary surface. The QR sheet and phone page a
 
 ![中文二维码上传面板](docs/assets/screenshots/zh/qr-phone-upload.png)
 
-![中文手机上传完成](docs/assets/screenshots/zh/phone-upload-success.png)
+![中文手机端浅色上传完成](docs/assets/screenshots/zh/phone-upload-success.png)
+
+![中文手机端深色上传完成](docs/assets/screenshots/zh/phone-upload-dark.png)
 
 ### English workstation
 
@@ -78,7 +80,9 @@ The full admin workstation is the primary surface. The QR sheet and phone page a
 
 ![English QR upload sheet](docs/assets/screenshots/en/qr-phone-upload.png)
 
-![English phone upload complete](docs/assets/screenshots/en/phone-upload-success.png)
+![English mobile light upload complete](docs/assets/screenshots/en/phone-upload-success.png)
+
+![English mobile dark upload complete](docs/assets/screenshots/en/phone-upload-dark.png)
 
 The QR images in these screenshots are documentation-only easter eggs. Never expose a live session token, Access credential, R2 secret, or personal image in public documentation.
 

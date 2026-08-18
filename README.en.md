@@ -42,7 +42,11 @@ The full desktop workstation is the primary product surface. The QR sheet and ph
 
 ![English QR sheet](docs/assets/screenshots/en/qr-phone-upload.png)
 
-![English phone upload complete](docs/assets/screenshots/en/phone-upload-success.png)
+![English mobile light upload complete](docs/assets/screenshots/en/phone-upload-success.png)
+
+![English mobile dark upload complete](docs/assets/screenshots/en/phone-upload-dark.png)
+
+All four mobile screenshots use the same `390 × 844` canvas. The dark state is rendered through the phone's system color-scheme preference.
 
 The QR screenshots are documentation-only demos. Never commit a production QR token, Access credential, or personal file to a public repository.
 

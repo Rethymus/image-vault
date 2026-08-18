@@ -170,6 +170,14 @@ function uploadPage(token: string, expiresAt: number) {
         const copy = COPY[language];
         document.documentElement.lang = language;
         document.title = copy.title + " · Vault";
+        const themeMeta = document.querySelector("meta[name='theme-color']");
+        const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        const applyTheme = (isDark) => {
+          document.documentElement.dataset.theme = isDark ? "dark" : "light";
+          if (themeMeta) themeMeta.setAttribute("content", isDark ? "#000000" : "#f5f5f7");
+        };
+        applyTheme(colorScheme.matches);
+        colorScheme.addEventListener?.("change", (event) => applyTheme(event.matches));
         document.querySelector("#subtitle-label").textContent = copy.subtitle;
         document.querySelector("#title").textContent = copy.title;
         document.querySelector("#description").textContent = copy.description;

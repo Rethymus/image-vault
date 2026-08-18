@@ -40,7 +40,11 @@ Agent 不得猜测生产域名、bucket、Access audience 或 owner 邮箱，也
 
 ![中文二维码面板](docs/assets/screenshots/zh/qr-phone-upload.png)
 
-![中文手机上传完成](docs/assets/screenshots/zh/phone-upload-success.png)
+![中文手机端浅色上传完成](docs/assets/screenshots/zh/phone-upload-success.png)
+
+![中文手机端深色上传完成](docs/assets/screenshots/zh/phone-upload-dark.png)
+
+中英文文档中的四张手机端截图统一使用 `390 × 844` 的移动端画布；深色状态跟随手机系统的深色外观渲染。
 
 二维码截图只用于文档演示，不是生产上传通道；不要把生产二维码、临时 token、Access 凭据或个人文件放进公开仓库。
 
