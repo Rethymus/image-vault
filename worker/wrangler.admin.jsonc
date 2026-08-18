@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vault-admin",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "assets": {
+    "directory": "../dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "private-image-vault"
+    }
+  ],
+  "vars": {
+    "ADMIN_HOST": "YOUR_ADMIN_WORKER.workers.dev",
+    "UPLOAD_ORIGIN": "https://YOUR_UPLOAD_WORKER.workers.dev",
+    "PUBLIC_IMAGE_ORIGIN": "https://YOUR_BUCKET_ID.r2.dev",
+    "MAX_IMAGE_BYTES": "8388608"
+  },
+  "secrets": {
+    "required": [
+      "ACCESS_TEAM_DOMAIN",
+      "ACCESS_AUD",
+      "OWNER_EMAILS"
+    ]
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

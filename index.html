@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f5f7" />
+    <meta name="description" content="A private image vault with public-by-link assets." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Vault · Private image manager</title>
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem("vault-theme") || "system";
+          const resolved = theme === "system"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : theme;
+          document.documentElement.dataset.theme = resolved === "dark" ? "dark" : "light";
+          document.documentElement.style.colorScheme = resolved === "dark" ? "dark" : "light";
+          const language = localStorage.getItem("vault-language");
+          if (language === "zh" || language === "en") document.documentElement.lang = language;
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

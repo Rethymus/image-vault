@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vault-upload",
+  "main": "src/upload.ts",
+  "compatibility_date": "2026-08-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "private-image-vault"
+    }
+  ],
+  "vars": {
+    "PUBLIC_IMAGE_ORIGIN": "https://YOUR_BUCKET_ID.r2.dev",
+    "MAX_IMAGE_BYTES": "8388608"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

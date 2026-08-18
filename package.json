@@ -1,0 +1,33 @@
+{
+  "name": "image-vault",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "worker:deploy": "npm run worker:types && npm run worker:typecheck && npm run build && wrangler deploy --config worker/wrangler.admin.jsonc",
+    "worker:dry-run": "npm run worker:types && npm run worker:typecheck && npm run build && wrangler deploy --config worker/wrangler.admin.jsonc --dry-run",
+    "worker:upload:deploy": "npm run worker:typecheck && wrangler deploy --config worker/wrangler.upload.jsonc",
+    "worker:upload:dry-run": "npm run worker:typecheck && wrangler deploy --config worker/wrangler.upload.jsonc --dry-run",
+    "worker:all:deploy": "npm run worker:types && npm run worker:typecheck && npm run build && wrangler deploy --config worker/wrangler.upload.jsonc && wrangler deploy --config worker/wrangler.admin.jsonc",
+    "cloudflare:setup": "pwsh -File scripts/cloudflare-setup.ps1",
+    "worker:types": "wrangler types worker/worker-configuration.d.ts --config worker/wrangler.admin.jsonc --strict-vars",
+    "worker:typecheck": "tsc --project worker/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "jose": "^6.0.10",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260811.1",
+    "@types/node": "^26.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^7.0.2",
+    "vite": "^6.1.0",
+    "wrangler": "^4.28.0"
+  }
+}
