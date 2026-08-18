@@ -6,27 +6,37 @@ A reproducible personal image workstation for Cloudflare: the admin surface is o
 
 ## 先给 Agent / Start with an Agent
 
-本仓库采用 Agent-Reach 式的“远程入口”设计：不需要先把整个仓库拉下来。直接把下面这一句话和 raw URL 丢给 Codex、Claude Code、Cursor、Windsurf 或其他实现 Agent，Agent 应该在用户当前工作区内读取说明并实现工作站：
+像 Agent-Reach 一样，把下面的一句话直接复制给 Codex、Claude Code、Cursor、Windsurf 或其他实现 Agent。它会读取远程入口，并在 Agent 当前已经打开的工作区里复刻，不需要先拉取整个仓库：
 
-This repository uses an Agent-Reach-style remote entrypoint. The implementation Agent does not need to clone the whole repository first. Give it the one-line request and raw URL below; it should read the brief and build the workstation in the user's current workspace:
+Like Agent-Reach, copy one line directly to Codex, Claude Code, Cursor, Windsurf, or another implementation Agent. It reads the remote entrypoint and reproduces the workstation in the workspace it is already using; cloning this repository first is not required:
 
 ```text
-请在当前工作区复刻 Image Vault 图片工作站，先读取并遵守：
-https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
 ```text
-Reproduce the Image Vault workstation in the current workspace. Read and follow:
-https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+Help me reproduce the Image Vault workstation: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
-入口文档本身是自包含的，包含产品契约、两 Worker + R2 + Access 架构、UI 设计要求、API 合同、构建不变量、安全边界、执行阶段和验收矩阵。Agent 只应按当前阶段读取补充文档，不应把“先克隆整个仓库”当作前置条件。
+已经复刻过、需要同步修复或更新时，直接复制这一句：
 
-The remote brief is self-contained: it includes the product contract, Workers + R2 + Access architecture, UI requirements, API contract, build invariants, safety gates, execution phases, and acceptance matrix. Agents should fetch extra documents only when a phase needs them, not clone the entire repository as a prerequisite.
+If the workstation already exists and needs fixes or an update, copy this instead:
 
-按需读取：[`llms.txt`](llms.txt) 是机器友好的索引；[`AGENTS.md`](AGENTS.md) 是 checkout 后的本地执行约定；[`docs/pitfalls.md`](docs/pitfalls.md) 记录真实踩坑和回归防线；[`docs/agent-reproduction.md`](docs/agent-reproduction.md) 是详细中英 runbook。
+```text
+帮我更新当前工作区的 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
 
-Read as needed: [`llms.txt`](llms.txt) is the machine-friendly index; [`AGENTS.md`](AGENTS.md) is the local contract after a checkout; [`docs/pitfalls.md`](docs/pitfalls.md) records real failures and regression guards; [`docs/agent-reproduction.md`](docs/agent-reproduction.md) is the detailed bilingual runbook.
+```text
+Update the Image Vault workstation in the current workspace: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
+
+[`docs/install.md`](docs/install.md) 是面向 Agent 的安装/复刻契约；[`docs/update.md`](docs/update.md) 是更新契约；[`AGENT_PROMPT.md`](AGENT_PROMPT.md) 保留完整技术细节；[`llms.txt`](llms.txt) 是机器友好的入口索引。它们都要求先只读检查、本地实现和 dry-run，再等待明确的云端授权。
+
+[`docs/install.md`](docs/install.md) is the Agent-facing installation/reproduction contract; [`docs/update.md`](docs/update.md) is the update contract; [`AGENT_PROMPT.md`](AGENT_PROMPT.md) retains the full technical brief; and [`llms.txt`](llms.txt) is the machine-friendly index. All of them require read-only inspection, local implementation, and dry-runs before explicit approval for cloud changes.
+
+真实踩坑与回归防线见 [`docs/pitfalls.md`](docs/pitfalls.md)，详细中英执行手册见 [`docs/agent-reproduction.md`](docs/agent-reproduction.md)。
+
+Real failure history and regression guards are in [`docs/pitfalls.md`](docs/pitfalls.md); the detailed bilingual runbook is [`docs/agent-reproduction.md`](docs/agent-reproduction.md).
 
 ## 这是什么 / What this is
 

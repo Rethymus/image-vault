@@ -1,8 +1,8 @@
 # Agent operating contract / Agent 执行约定
 
-This repository is intentionally organized so that an implementation agent can reproduce the deployment from a remote brief or from a checkout. The preferred entrypoint does not require cloning this repository: give the raw `AGENT_PROMPT.md` URL to the Agent and let it implement in the user's current workspace. If this repository is already checked out, read this file first, then read `AGENT_PROMPT.md`, `README.md`, and `docs/agent-reproduction.md` before changing code or creating Cloudflare resources.
+This repository is intentionally organized so that an implementation agent can reproduce the deployment from a remote brief or from a checkout. The preferred entrypoint does not require cloning this repository: give the raw `docs/install.md` URL to the Agent and let it implement in the user's current workspace. For an existing implementation, give the raw `docs/update.md` URL. If this repository is already checked out, read this file first, then read `AGENT_PROMPT.md`, `README.md`, and `docs/agent-reproduction.md` before changing code or creating Cloudflare resources.
 
-本仓库专门按“交给 Agent 即可复刻”的方式组织。推荐直接把 `AGENT_PROMPT.md` 的 raw URL 交给 Agent，不要求先克隆整个仓库；如果仓库已经在当前工作区，Agent 必须先读取本文件、`AGENT_PROMPT.md`、`README.md` 和 `docs/agent-reproduction.md`，再修改代码或创建 Cloudflare 资源。
+本仓库专门按“交给 Agent 即可复刻”的方式组织。推荐直接把 `docs/install.md` 的 raw URL 交给 Agent，不要求先克隆整个仓库；已有实现需要同步时使用 `docs/update.md`；如果仓库已经在当前工作区，Agent 必须先读取本文件、`AGENT_PROMPT.md`、`README.md` 和 `docs/agent-reproduction.md`，再修改代码或创建 Cloudflare 资源。
 
 ## Mission / 目标
 

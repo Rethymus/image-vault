@@ -1,23 +1,21 @@
 # Image Vault — remote Agent implementation brief
 
-This file is the remote, self-contained implementation brief for the Image Vault workstation. It is intentionally usable without cloning this repository. Give the raw URL to an implementation Agent and ask it to build the workstation in the user's current workspace.
+This file is the detailed remote, self-contained implementation brief for the Image Vault workstation. It is intentionally usable without cloning this repository. The human-facing one-line installation entrypoint is [`docs/install.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md); the update entrypoint is [`docs/update.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md). This file remains available as the deep technical contract for Agents that need the full API, build, safety, and acceptance details.
 
-本文件是 Image Vault 图片工作站的远程、自包含复刻说明。它不要求 Agent 先克隆本仓库；把 raw URL 直接交给 Agent，它应当在用户当前工作区内完成检查、实现、验证和（得到授权后）部署。
+本文件是 Image Vault 图片工作站的详细、远程、自包含复刻说明。它不要求 Agent 先克隆本仓库；面向使用者的一句话安装入口是 `docs/install.md`，已有实现的更新入口是 `docs/update.md`。需要完整 API、构建、安全和验收细节时，Agent 可以直接读取本文件。
 
 ## Copy this to an Agent / 直接复制给 Agent
 
 Chinese:
 
 ```text
-请在当前工作区复刻 Image Vault 图片工作站。先读取这份远程实现说明，再检查当前工作区；不要克隆整个仓库，不要把本仓库当作必须复制的源码目录。按说明从只读检查开始，在本地完成实现和 dry-run；没有得到我对具体云端变更的明确授权，不得创建/删除 R2、部署 Worker、修改 Cloudflare Access、删除真实资源或请求任何 secret。实现完成后逐条执行验收矩阵并报告证据：
-https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
 English:
 
 ```text
-Reproduce the Image Vault image workstation in the current workspace. Read this remote implementation brief first, then inspect the current workspace; do not clone the whole repository or treat it as a source directory that must be copied. Start read-only, implement locally, and run dry-runs. Do not create/delete R2 resources, deploy Workers, change Cloudflare Access, delete real assets, or request any secret until I explicitly approve that exact cloud-mutation phase. Finish with the acceptance matrix and evidence:
-https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+Help me reproduce the Image Vault workstation: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
 ## Mission / 目标
@@ -222,6 +220,8 @@ Do not end with “done” if the private authenticated flow was not tested. Sta
 
 These are optional follow-up documents. Fetch only the one needed for the current phase; do not clone the repository:
 
+- [`docs/install.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md) — one-line human-facing installation/reproduction entrypoint;
+- [`docs/update.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md) — one-line human-facing update entrypoint;
 - [`llms.txt`](https://raw.githubusercontent.com/Rethymus/image-vault/main/llms.txt) — short machine-readable index;
 - [`docs/pitfalls.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/pitfalls.md) — failures found while building this project and regression guards;
 - [`docs/agent-reproduction.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/agent-reproduction.md) — detailed bilingual runbook;

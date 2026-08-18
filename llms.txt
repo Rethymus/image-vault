@@ -4,16 +4,26 @@
 
 ## Give this to an implementation Agent
 
-Copy this one-line request. The Agent reads the remote implementation brief and builds in the user's current workspace; it does not need to clone this repository:
+Copy this one-line request, exactly as you would give an installation instruction. The Agent reads the remote brief and builds in the user's current workspace; it does not need to clone this repository:
 
 ```text
-复刻 Image Vault 图片工作站到当前工作区，先读取并遵守：https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
 English:
 
 ```text
-Reproduce the Image Vault workstation in the current workspace. Read and follow: https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+Help me reproduce the Image Vault workstation: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
+```
+
+For an existing installation, copy the update instruction:
+
+```text
+帮我更新当前工作区的 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
+
+```text
+Update the Image Vault workstation in the current workspace: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
 ```
 
 ## Required behavior
@@ -30,7 +40,9 @@ Reproduce the Image Vault workstation in the current workspace. Read and follow:
 
 ## Read only when needed
 
-- [Remote implementation brief](https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md)
+- [Installation / reproduction guide](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md)
+- [Update guide](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md)
+- [Detailed technical brief](https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md)
 - [Pitfalls and regression guards](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/pitfalls.md)
 - [Detailed bilingual runbook](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/agent-reproduction.md)
 - [Architecture](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/architecture.md)

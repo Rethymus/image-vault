@@ -23,16 +23,31 @@ The showcase supports file selection or drag-and-drop, simulated upload progress
 
 See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for the asset map and deployment boundary. On first setup, choose `GitHub Actions` under `Settings → Pages`.
 
-## 0. Agent reproduction entrypoint
+## 0. Agent installation and update entrypoints
 
-You do not need to clone the whole repository first. Give an implementation Agent this one-line request; it reads the remote self-contained brief and builds in the user's current workspace:
+Following the Agent-Reach pattern, you do not need to clone the whole repository first. Give an implementation Agent one line; it reads the remote entrypoint and builds in the workspace it is already using:
 
 ```text
-Reproduce the Image Vault workstation in the current workspace. Read and follow:
-https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+Help me reproduce the Image Vault workstation: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
-The remote brief contains the product contract, Apple-inspired light/dark/system UI requirements, bilingual copy, two-Worker + R2 + Access architecture, API contract, build invariants, safety gates, execution phases, and acceptance matrix. Fetch [`llms.txt`](llms.txt), [`docs/pitfalls.md`](docs/pitfalls.md), or [`docs/agent-reproduction.md`](docs/agent-reproduction.md) only when the current phase needs more detail; do not treat a full repository clone as a prerequisite.
+If the workstation already exists and needs fixes or an update, give the Agent this one line:
+
+```text
+Update the Image Vault workstation in the current workspace: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
+
+Chinese equivalents:
+
+```text
+帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
+```
+
+```text
+帮我更新当前工作区的 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
+
+These raw documents are direct Agent entrypoints, not instructions to run `git clone`. The installation brief contains the product contract, Apple-inspired light/dark/system UI requirements, bilingual copy, two-Worker + R2 + Access architecture, API contract, build invariants, safety gates, execution phases, and acceptance matrix. The update brief focuses on bringing an existing implementation back into alignment without destroying real configuration or assets. Fetch [`llms.txt`](llms.txt), [`docs/pitfalls.md`](docs/pitfalls.md), or [`docs/agent-reproduction.md`](docs/agent-reproduction.md) only when the current phase needs more detail.
 
 The default order is:
 
