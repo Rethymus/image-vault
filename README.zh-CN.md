@@ -13,6 +13,37 @@
 - React + Vite：管理端界面；
 - `qrcode`：在管理端浏览器里生成二维码。
 
+## 0. 交给 Agent 的复刻入口
+
+如果目标是让 Agent 一比一复刻整个部署，不要只把某个代码文件丢给它。请让它先读取：
+
+1. [`AGENTS.md`](AGENTS.md)：安全边界、停止条件和必须验证的命令；
+2. [`AGENT_PROMPT.md`](AGENT_PROMPT.md)：可直接复制给 Agent 的启动指令；
+3. 本文件与 [`README.en.md`](README.en.md)：完整双语背景和取舍；
+4. [`docs/agent-reproduction.md`](docs/agent-reproduction.md)：分阶段 runbook、输入清单、验收矩阵和 GitHub Actions 行为。
+
+Agent 的默认顺序必须是：
+
+```text
+只读检查 → 找出 YOUR_* → 本地 dry-run → 类型检查/构建 → 得到授权 → 创建云资源 → 线上验收
+```
+
+Agent 不得猜测生产域名、bucket、Access audience 或 owner 邮箱，也不得让用户把 secret 粘贴到聊天或源文件中。
+
+## 工作站截图与辅助上传状态
+
+这里的截图重点是完整的桌面工作站；二维码面板和手机页只是工作站中的临时上传分支，不是整个产品的唯一界面。下面同时展示中英文、浅色和深色状态。
+
+![中文完整工作站](docs/assets/screenshots/zh/admin-assets.png)
+
+![中文深色工作站](docs/assets/screenshots/zh/admin-dark.png)
+
+![中文二维码面板](docs/assets/screenshots/zh/qr-phone-upload.png)
+
+![中文手机上传完成](docs/assets/screenshots/zh/phone-upload-success.png)
+
+二维码截图只用于文档演示，不是生产上传通道；不要把生产二维码、临时 token、Access 凭据或个人文件放进公开仓库。
+
 ## 1. 为什么最初考虑 GitHub private repo + GitHub Pages？
 
 最开始的思路很自然：
@@ -269,18 +300,14 @@ npm run worker:upload:dry-run
 
 然后完成一次真实流程：管理端生成二维码 → 手机无登录打开 `/s/<token>` → 上传一张图片 → 管理端自动出现 → 停止并关闭 → 原二维码链接返回 410。
 
-## 6. GitHub Actions 自动部署
+## 6. GitHub Actions：验证与可选部署
 
-`.github/workflows/deploy.yml` 会：
+之前两个仓库的 Action 失败在 Wrangler 部署步骤：GitHub runner 是非交互环境，而仓库没有 `CLOUDFLARE_API_TOKEN`。这不是前端构建失败。现在工作流明确分成两个 job：
 
-1. 安装依赖；
-2. 生成 Worker 类型；
-3. 类型检查；
-4. 构建管理端；
-5. 部署公开手机上传 Worker；
-6. 部署管理 Worker。
+1. `Validate Vault`：push 到 `main` 或手动运行时都执行，安装依赖、生成 Worker 类型、类型检查、构建管理端，并运行上传 Worker 与管理 Worker 的 dry-run；不需要 Cloudflare API token；
+2. `Deploy both Workers (optional)`：只有手动运行 workflow 并将 `deploy` 设为 `true` 才会进入；它先检查密钥，缺少密钥时只记录 notice 并保持验证结果为绿色，不会假装已部署。
 
-在 GitHub 仓库中配置：
+在 GitHub 仓库设置中配置：
 
 ```text
 Secrets:
@@ -291,7 +318,7 @@ Repository variable:
   PUBLIC_IMAGE_ORIGIN
 ```
 
-API Token 要使用最小权限，不要使用 Cloudflare Global API Key。第一次部署建议先在本地完成，并确认两个 Worker 的 bindings、Access 和 R2 地址无误，再启用 Actions。
+API Token 要使用最小权限，不要使用 Cloudflare Global API Key。第一次部署建议先在本地完成，并确认两个 Worker 的 bindings、Access 和 R2 地址无误，再在 Actions 页面手动运行并选择 `deploy=true`。公开仓库的 fork 可以只使用验证 job，不需要拥有你的 Cloudflare 凭据。
 
 ## 7. 临时二维码的工作方式
 

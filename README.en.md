@@ -15,6 +15,37 @@ The stack is:
 - React + Vite for the admin UI;
 - `qrcode` for browser-side QR rendering.
 
+## 0. Agent reproduction entrypoint
+
+If the goal is a one-to-one reproduction, do not hand an agent only one source file. Ask it to read these repository entrypoints first:
+
+1. [`AGENTS.md`](AGENTS.md) for safety boundaries, stop conditions, and required checks;
+2. [`AGENT_PROMPT.md`](AGENT_PROMPT.md) for a copyable startup prompt;
+3. this file and [`README.zh-CN.md`](README.zh-CN.md) for the complete bilingual rationale;
+4. [`docs/agent-reproduction.md`](docs/agent-reproduction.md) for the phased runbook, owner-input list, acceptance matrix, and Actions behavior.
+
+The default agent order is:
+
+```text
+read-only inspection → identify YOUR_* → local dry-runs → typecheck/build → owner approval → cloud mutation → online acceptance
+```
+
+The agent must not guess production hosts, bucket names, Access audiences, or owner emails, and must never ask the user to paste secrets into chat or source files.
+
+## Workstation screenshots and supporting upload states
+
+The full desktop workstation is the primary product surface. The QR sheet and phone page are supporting branches of that workstation, not the whole product. The repository includes Chinese/English and light/dark states.
+
+![English full workstation](docs/assets/screenshots/en/admin-assets.png)
+
+![English dark workstation](docs/assets/screenshots/en/admin-dark.png)
+
+![English QR sheet](docs/assets/screenshots/en/qr-phone-upload.png)
+
+![English phone upload complete](docs/assets/screenshots/en/phone-upload-success.png)
+
+The QR screenshots are documentation-only demos. Never commit a production QR token, Access credential, or personal file to a public repository.
+
 ## 1. Why the original GitHub Pages idea was attractive
 
 The first design was deliberately GitHub-centric:
@@ -224,22 +255,25 @@ npm run worker:upload:dry-run
 
 Then run the real flow: generate a QR code, open its tokenized page without authentication, upload one image, wait for the admin list to update, stop the session, and confirm that the old URL returns 410.
 
-## 6. GitHub Actions
+## 6. GitHub Actions: validation and optional deployment
 
-`.github/workflows/deploy.yml` installs dependencies, generates types, checks the Worker, builds the admin UI, deploys the public phone Worker, and deploys the admin Worker.
+The earlier runs in both repositories failed at the Wrangler deployment step because the GitHub runner is non-interactive and no `CLOUDFLARE_API_TOKEN` was configured. The UI build was not the problem. The workflow is now intentionally split into two jobs:
 
-Configure these repository secrets and variables:
+1. `Validate Vault` runs on pushes to `main` and on manual runs. It installs dependencies, generates Worker types, typechecks, builds the admin UI, and runs both Wrangler dry-runs. It needs no Cloudflare API token.
+2. `Deploy both Workers (optional)` runs only after a manual workflow dispatch with `deploy=true`. It checks for the deployment secrets first; if they are absent, it records a notice and leaves validation green rather than pretending that a deployment happened.
+
+Configure these only in repository settings:
 
 ```text
 Secrets:
   CLOUDFLARE_API_TOKEN
   CLOUDFLARE_ACCOUNT_ID
 
-Repository variable:
+Variables:
   PUBLIC_IMAGE_ORIGIN
 ```
 
-Use an account-scoped API token with the least permissions required by the deployment. Do not use the Cloudflare Global API Key. The first deployment should be performed manually so that bindings, Access, and the R2 origin can be verified before automation is enabled.
+Use an account-scoped API token with the least permissions required by the deployment. Do not use the Cloudflare Global API Key. Perform the first deployment locally, verify bindings, Access, and the R2 origin, then run Actions manually with `deploy=true`. Forks of the public repository can run the validation job without having your Cloudflare credentials.
 
 ## 7. Temporary QR flow
 
