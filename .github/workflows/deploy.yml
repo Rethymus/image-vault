@@ -54,8 +54,7 @@ jobs:
       - name: Dry-run admin Worker
         run: npm run worker:dry-run
         env:
-          VITE_API_MODE: worker
-          VITE_PUBLIC_IMAGE_ORIGIN: ${{ vars.PUBLIC_IMAGE_ORIGIN || 'https://img.example.com' }}
+          VITE_PUBLIC_IMAGE_ORIGIN: ${{ vars.PUBLIC_IMAGE_ORIGIN || 'https://YOUR_BUCKET_ID.r2.dev' }}
 
   deploy:
     needs: validate
