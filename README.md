@@ -1,4 +1,4 @@
-# Cloudflare Private Image Vault
+# Image Vault
 
 一个可以交给 Agent 直接复刻的个人图片工作站：管理端私有、图片按完整链接公开、链接不可枚举，并支持通过临时二维码从手机上传。
 
