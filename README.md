@@ -1,14 +1,32 @@
-# Image Vault
+<div align="center">
 
-一个可以交给 Agent 直接复刻的个人图片工作站：管理端私有、图片按完整链接公开、链接不可枚举，并支持通过临时二维码从手机上传。
+# 🗂️ Image Vault
 
-A reproducible personal image workstation for Cloudflare: the admin surface is owner-only, images are public-by-link with unguessable URLs, and a short-lived QR channel lets a phone upload without signing in.
+### 给你的 Agent 一套可复刻的个人图片工作站
+
+### A reproducible personal image workstation for your Agent
+
+管理端私有 · 图片按完整链接公开 · 不可枚举的随机 URL · 临时二维码手机上传
+
+Owner-only admin · public-by-link images · unguessable URLs · short-lived QR phone upload
+
+[快速开始](#先给-agent--start-with-an-agent) · [中文完整说明](README.zh-CN.md) · [English guide](README.en.md) · [Pages 演示](https://rethymus.github.io/image-vault/)
+
+</div>
+
+<div align="center">
+
+> 🧭 推荐搭配：[Agent-Reach](https://github.com/Panniantong/Agent-Reach) —— 给 AI Agent 一键安装互联网访问能力，适合读取网页、搜索 GitHub、查看 YouTube 等内容。
+
+</div>
+
+---
 
 ## 先给 Agent / Start with an Agent
 
-像 Agent-Reach 一样，把下面的一句话直接复制给 Codex、Claude Code、Cursor、Windsurf 或其他实现 Agent。它会读取远程入口，并在 Agent 当前已经打开的工作区里复刻，不需要先拉取整个仓库：
+参考 [Agent-Reach](https://github.com/Panniantong/Agent-Reach) 的远程入口设计，把下面的一句话直接复制给 Codex、Claude Code、Cursor、Windsurf 或其他实现 Agent。它会读取远程入口，并在 Agent 当前已经打开的工作区里复刻，不需要先拉取整个仓库：
 
-Like Agent-Reach, copy one line directly to Codex, Claude Code, Cursor, Windsurf, or another implementation Agent. It reads the remote entrypoint and reproduces the workstation in the workspace it is already using; cloning this repository first is not required:
+Following the remote-entrypoint pattern used by [Agent-Reach](https://github.com/Panniantong/Agent-Reach), copy one line directly to Codex, Claude Code, Cursor, Windsurf, or another implementation Agent. It reads the remote entrypoint and reproduces the workstation in the workspace it is already using; cloning this repository first is not required:
 
 ```text
 帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
@@ -95,9 +113,14 @@ The full admin workstation is the primary surface. The QR sheet and phone page a
 
 ![中文二维码上传面板](docs/assets/screenshots/zh/qr-phone-upload.png)
 
-![中文手机端浅色上传完成](docs/assets/screenshots/zh/phone-upload-success.png)
-
-![中文手机端深色上传完成](docs/assets/screenshots/zh/phone-upload-dark.png)
+<div align="center">
+<table>
+<tr>
+<td align="center"><strong>中文 · 浅色 / Chinese · Light</strong><br><img src="docs/assets/screenshots/zh/phone-upload-success.png" width="260" alt="中文手机端浅色上传完成"></td>
+<td align="center"><strong>中文 · 深色 / Chinese · Dark</strong><br><img src="docs/assets/screenshots/zh/phone-upload-dark.png" width="260" alt="中文手机端深色上传完成"></td>
+</tr>
+</table>
+</div>
 
 ### English workstation
 
@@ -107,9 +130,14 @@ The full admin workstation is the primary surface. The QR sheet and phone page a
 
 ![English QR upload sheet](docs/assets/screenshots/en/qr-phone-upload.png)
 
-![English mobile light upload complete](docs/assets/screenshots/en/phone-upload-success.png)
-
-![English mobile dark upload complete](docs/assets/screenshots/en/phone-upload-dark.png)
+<div align="center">
+<table>
+<tr>
+<td align="center"><strong>English · Light</strong><br><img src="docs/assets/screenshots/en/phone-upload-success.png" width="260" alt="English mobile light upload complete"></td>
+<td align="center"><strong>English · Dark</strong><br><img src="docs/assets/screenshots/en/phone-upload-dark.png" width="260" alt="English mobile dark upload complete"></td>
+</tr>
+</table>
+</div>
 
 The QR images in these screenshots are documentation-only easter eggs. Never expose a live session token, Access credential, R2 secret, or personal image in public documentation.
 

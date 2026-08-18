@@ -1,4 +1,20 @@
-# Image Vault: Complete Cloudflare Workstation Guide
+<div align="center">
+
+# 🗂️ Image Vault
+
+### A reproducible Cloudflare image workstation for your Agent
+
+Owner-only admin · public-by-link images · unguessable URLs · short-lived QR phone upload
+
+[Quick start](#0-agent-installation-and-update-entrypoints) · [中文说明](README.zh-CN.md) · [GitHub Pages showcase](https://rethymus.github.io/image-vault/)
+
+[Recommended companion: Agent-Reach](https://github.com/Panniantong/Agent-Reach)
+
+</div>
+
+---
+
+This is the complete English guide for Image Vault.
 
 This repository contains a small owner-only image manager for personal portfolios, README assets, project screenshots, and occasional phone uploads.
 
@@ -25,7 +41,7 @@ See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for the asset map a
 
 ## 0. Agent installation and update entrypoints
 
-Following the Agent-Reach pattern, you do not need to clone the whole repository first. Give an implementation Agent one line; it reads the remote entrypoint and builds in the workspace it is already using:
+Following the remote-entrypoint pattern used by [Agent-Reach](https://github.com/Panniantong/Agent-Reach), you do not need to clone the whole repository first. Give an implementation Agent one line; it reads the remote entrypoint and builds in the workspace it is already using:
 
 ```text
 Help me reproduce the Image Vault workstation: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
@@ -67,11 +83,16 @@ The full desktop workstation is the primary product surface. The QR sheet and ph
 
 ![English QR sheet](docs/assets/screenshots/en/qr-phone-upload.png)
 
-![English mobile light upload complete](docs/assets/screenshots/en/phone-upload-success.png)
+<div align="center">
+<table>
+<tr>
+<td align="center"><strong>Light mode</strong><br><img src="docs/assets/screenshots/en/phone-upload-success.png" width="260" alt="English mobile light upload complete"></td>
+<td align="center"><strong>Dark mode</strong><br><img src="docs/assets/screenshots/en/phone-upload-dark.png" width="260" alt="English mobile dark upload complete"></td>
+</tr>
+</table>
+</div>
 
-![English mobile dark upload complete](docs/assets/screenshots/en/phone-upload-dark.png)
-
-All four mobile screenshots use the same `390 × 844` canvas. The dark state is rendered through the phone's system color-scheme preference.
+All mobile screenshots across both language guides use the same `390 × 844` canvas and the same display width in a centered side-by-side layout. The dark state is rendered through the phone's system color-scheme preference.
 
 The QR screenshots are documentation-only demos. Never commit a production QR token, Access credential, or personal file to a public repository.
 
