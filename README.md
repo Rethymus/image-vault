@@ -2,9 +2,9 @@
 
 # 🗂️ Image Vault
 
-### 给你的 Agent 一套可复刻的个人图片工作站
+### 管理个人图片资产的轻量工作站
 
-### A reproducible personal image workstation for your Agent
+### A lightweight workstation for personal image assets
 
 管理端私有 · 图片按完整链接公开 · 不可枚举的随机 URL · 临时二维码手机上传
 
@@ -14,19 +14,13 @@ Owner-only admin · public-by-link images · unguessable URLs · short-lived QR 
 
 </div>
 
-<div align="center">
-
-> 🧭 推荐搭配：[Agent-Reach](https://github.com/Panniantong/Agent-Reach) —— 给 AI Agent 一键安装互联网访问能力，适合读取网页、搜索 GitHub、查看 YouTube 等内容。
-
-</div>
-
 ---
 
 ## 先给 Agent / Start with an Agent
 
-参考 [Agent-Reach](https://github.com/Panniantong/Agent-Reach) 的远程入口设计，把下面的一句话直接复制给 Codex、Claude Code、Cursor、Windsurf 或其他实现 Agent。它会读取远程入口，并在 Agent 当前已经打开的工作区里复刻，不需要先拉取整个仓库：
+本项目支持手动部署，也提供一个可选的 Agent 辅助复刻入口。入口文档的组织方式参考了 [Agent-Reach](https://github.com/Panniantong/Agent-Reach) 的 raw 文档模式；这只是文档组织上的参考，不表示 Image Vault 与 Agent-Reach 存在功能适配、集成或依赖关系。把下面的一句话直接复制给 Codex、Claude Code、Cursor、Windsurf 或其他实现 Agent，它会在当前工作区内复刻，不需要先拉取整个仓库：
 
-Following the remote-entrypoint pattern used by [Agent-Reach](https://github.com/Panniantong/Agent-Reach), copy one line directly to Codex, Claude Code, Cursor, Windsurf, or another implementation Agent. It reads the remote entrypoint and reproduces the workstation in the workspace it is already using; cloning this repository first is not required:
+This project can be deployed manually and also provides an optional Agent-assisted reproduction entrypoint. Its document organization takes inspiration from [Agent-Reach](https://github.com/Panniantong/Agent-Reach)'s raw-document pattern; this does not mean that Image Vault is functionally compatible with, integrated with, or dependent on Agent-Reach. Copy one line to an implementation Agent; it reproduces the workstation in the current workspace without first cloning this repository:
 
 ```text
 帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
@@ -195,28 +189,6 @@ Then follow [`docs/agent-reproduction.md`](docs/agent-reproduction.md). Replace 
 The Pages showcase is a separate demo build. Run plain `npm run build` only with `VITE_API_MODE=demo` and the Pages base path; never reuse that output for `vault-admin`.
 
 GitHub Pages 效果展示是独立的 demo 构建。普通 `npm run build` 只能配合 `VITE_API_MODE=demo` 和 Pages base path 使用，不能把这个产物拿去发布 `vault-admin`。
-
-## GitHub Actions：为什么之前失败、现在怎么运行 / GitHub Actions behavior
-
-之前两个仓库的 Action 在部署上传 Worker 时失败，原因是 GitHub 非交互环境没有 `CLOUDFLARE_API_TOKEN`，不是前端构建失败。现在工作流拆为两层：
-
-Both earlier runs failed at the Wrangler deployment step because a non-interactive GitHub runner had no `CLOUDFLARE_API_TOKEN`; the UI build was not the problem. The workflow now has two layers:
-
-1. `Validate Vault`：push 到 `main` 时自动运行，做依赖安装、类型检查、构建和两个 Wrangler dry-run，不需要 Cloudflare token；
-2. `Deploy both Workers (optional)`：只有手动运行并把 `deploy` 设为 `true` 才尝试部署；缺少密钥时只给出 notice，不伪装成已部署。
-
-Configure these only in GitHub repository settings:
-
-```text
-Secrets:
-  CLOUDFLARE_API_TOKEN
-  CLOUDFLARE_ACCOUNT_ID
-
-Variables:
-  PUBLIC_IMAGE_ORIGIN   # optional
-```
-
-This keeps the public reference repository green for forks while allowing the private maintenance repository to opt into deployment after credentials are configured.
 
 ## 安全边界 / Security boundary
 
