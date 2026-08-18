@@ -2,13 +2,11 @@
 
 # 🗂️ Image Vault
 
-### 给你的 Agent 一套可复刻的 Cloudflare 图片工作站
+### 管理个人图片资产的轻量 Cloudflare 工作站
 
 管理端私有 · 图片按完整链接公开 · 随机不可枚举 URL · 临时二维码手机上传
 
 [快速开始](#0-交给-agent-的安装与更新入口) · [English guide](README.en.md) · [GitHub Pages 演示](https://rethymus.github.io/image-vault/)
-
-[推荐项目：Agent-Reach](https://github.com/Panniantong/Agent-Reach)
 
 </div>
 
@@ -39,7 +37,7 @@
 
 ## 0. 交给 Agent 的安装与更新入口
 
-参考 [Agent-Reach](https://github.com/Panniantong/Agent-Reach) 的远程入口做法，不要求使用者先拉取整个仓库。直接把一句话复制给 Agent；远程入口会被读取，工作站会在 Agent 当前已经打开的工作区内复刻：
+本项目支持手动部署，也提供一个可选的 Agent 辅助复刻入口。入口文档的组织方式参考了 [Agent-Reach](https://github.com/Panniantong/Agent-Reach) 的 raw 文档模式；这只是文档组织上的参考，不表示 Image Vault 与 Agent-Reach 存在功能适配、集成或依赖关系。不要求使用者先拉取整个仓库，直接把一句话复制给 Agent 即可：
 
 ```text
 帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
@@ -352,29 +350,7 @@ npm run worker:upload:dry-run
 
 然后完成一次真实流程：管理端生成二维码 → 手机无登录打开 `/s/<token>` → 上传一张图片 → 管理端自动出现 → 停止并关闭 → 原二维码链接返回 410。
 
-## 6. GitHub Actions：验证与可选部署
-
-之前两个仓库的 Action 失败在 Wrangler 部署步骤：GitHub runner 是非交互环境，而仓库没有 `CLOUDFLARE_API_TOKEN`。这不是前端构建失败。现在工作流明确分成两个 job：
-
-1. `Validate Vault`：push 到 `main` 或手动运行时都执行，安装依赖、生成 Worker 类型、类型检查、构建管理端，并运行上传 Worker 与管理 Worker 的 dry-run；不需要 Cloudflare API token；
-2. `Deploy both Workers (optional)`：只有手动运行 workflow 并将 `deploy` 设为 `true` 才会进入；它先检查密钥，缺少密钥时只记录 notice 并保持验证结果为绿色，不会假装已部署。
-
-在 GitHub 仓库设置中配置：
-
-```text
-Secrets:
-  CLOUDFLARE_API_TOKEN
-  CLOUDFLARE_ACCOUNT_ID
-
-Repository variable:
-  PUBLIC_IMAGE_ORIGIN
-```
-
-API Token 要使用最小权限，不要使用 Cloudflare Global API Key。第一次部署建议先在本地完成，并确认两个 Worker 的 bindings、Access 和 R2 地址无误，再在 Actions 页面手动运行并选择 `deploy=true`。公开仓库的 fork 可以只使用验证 job，不需要拥有你的 Cloudflare 凭据。
-
-本次实际遇到的持久化、mock 数量、R2 分页、错误图片 origin、重复 React ID 和 Action 误判等问题，统一记录在 [`docs/pitfalls.md`](docs/pitfalls.md)，复刻时必须作为回归清单执行。
-
-## 7. 临时二维码的工作方式
+## 6. 临时二维码的工作方式
 
 管理端请求：
 
@@ -408,7 +384,7 @@ i/<43-character-asset-token>
 
 随机令牌由 Web Crypto `crypto.getRandomValues()` 生成，不使用 `Math.random()`。二维码的令牌是临时上传权限，不是图片本身的访问令牌。关闭会话只删除会话对象和上传标记；图片对象仍由 owner 管理。
 
-## 8. 关键踩坑
+## 7. 关键踩坑
 
 完整的双语踩坑记录、根因、修复方式和回归检查见 [`docs/pitfalls.md`](docs/pitfalls.md)。下面保留关键摘要，方便在 README 内快速浏览。
 
@@ -440,7 +416,7 @@ GitHub private source 与 Pages public deployment 是两层不同的权限。需
 
 这是为了避免访客把公开 Worker 当作可浏览的网站入口。只有管理端生成的完整 `/s/<token>` 地址才有意义。
 
-## 9. 代码结构
+## 8. 代码结构
 
 ```text
 src/
@@ -457,7 +433,7 @@ worker/wrangler.upload.jsonc    上传 Worker 配置
 .github/workflows/deploy.yml    双 Worker 自动部署
 ```
 
-## 10. 生产前检查
+## 9. 生产前检查
 
 - [ ] 已替换所有 `YOUR_*` 占位符；
 - [ ] 两个 Worker 使用同一个 R2 bucket；
@@ -470,6 +446,6 @@ worker/wrangler.upload.jsonc    上传 Worker 配置
 - [ ] 已验证管理 API 在无登录时不会返回资产数据；
 - [ ] 如果是正式生产环境，已考虑自定义域名、私有对象和签名 URL。
 
-## 11. 许可证
+## 10. 许可证
 
 代码和文档使用 MIT License。示例图片和截图仅用于演示与测试，使用者应在复刻时替换为自己拥有权利的素材。

@@ -2,13 +2,11 @@
 
 # 🗂️ Image Vault
 
-### A reproducible Cloudflare image workstation for your Agent
+### A lightweight Cloudflare workstation for personal image assets
 
 Owner-only admin · public-by-link images · unguessable URLs · short-lived QR phone upload
 
 [Quick start](#0-agent-installation-and-update-entrypoints) · [中文说明](README.zh-CN.md) · [GitHub Pages showcase](https://rethymus.github.io/image-vault/)
-
-[Recommended companion: Agent-Reach](https://github.com/Panniantong/Agent-Reach)
 
 </div>
 
@@ -41,7 +39,7 @@ See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for the asset map a
 
 ## 0. Agent installation and update entrypoints
 
-Following the remote-entrypoint pattern used by [Agent-Reach](https://github.com/Panniantong/Agent-Reach), you do not need to clone the whole repository first. Give an implementation Agent one line; it reads the remote entrypoint and builds in the workspace it is already using:
+This project can be deployed manually and also provides an optional Agent-assisted reproduction entrypoint. Its document organization takes inspiration from [Agent-Reach](https://github.com/Panniantong/Agent-Reach)'s raw-document pattern; this does not mean that Image Vault is functionally compatible with, integrated with, or dependent on Agent-Reach. You do not need to clone the whole repository first; give an implementation Agent one line and it will build in the workspace it is already using:
 
 ```text
 Help me reproduce the Image Vault workstation: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
@@ -305,29 +303,7 @@ npm run worker:upload:dry-run
 
 Then run the real flow: generate a QR code, open its tokenized page without authentication, upload one image, wait for the admin list to update, stop the session, and confirm that the old URL returns 410.
 
-## 6. GitHub Actions: validation and optional deployment
-
-The earlier runs in both repositories failed at the Wrangler deployment step because the GitHub runner is non-interactive and no `CLOUDFLARE_API_TOKEN` was configured. The UI build was not the problem. The workflow is now intentionally split into two jobs:
-
-1. `Validate Vault` runs on pushes to `main` and on manual runs. It installs dependencies, generates Worker types, typechecks, builds the admin UI, and runs both Wrangler dry-runs. It needs no Cloudflare API token.
-2. `Deploy both Workers (optional)` runs only after a manual workflow dispatch with `deploy=true`. It checks for the deployment secrets first; if they are absent, it records a notice and leaves validation green rather than pretending that a deployment happened.
-
-Configure these only in repository settings:
-
-```text
-Secrets:
-  CLOUDFLARE_API_TOKEN
-  CLOUDFLARE_ACCOUNT_ID
-
-Variables:
-  PUBLIC_IMAGE_ORIGIN
-```
-
-Use an account-scoped API token with the least permissions required by the deployment. Do not use the Cloudflare Global API Key. Perform the first deployment locally, verify bindings, Access, and the R2 origin, then run Actions manually with `deploy=true`. Forks of the public repository can run the validation job without having your Cloudflare credentials.
-
-The persistence, mock-count, R2 pagination, wrong-origin, duplicate-React-ID, and Actions failures found during the real build are recorded in [`docs/pitfalls.md`](docs/pitfalls.md). Treat that document as a regression checklist when reproducing the project.
-
-## 7. Temporary QR flow
+## 6. Temporary QR flow
 
 The admin UI calls:
 
@@ -361,7 +337,7 @@ i/<43-character-asset-token>
 
 The session token is a temporary upload capability. It is not the image URL capability. Revoking a session stops further uploads; it does not delete already-created image objects.
 
-## 8. Lessons learned
+## 7. Lessons learned
 
 The full bilingual failure log, root causes, fixes, and regression checks live in [`docs/pitfalls.md`](docs/pitfalls.md). The summary below keeps the key boundaries visible in the README.
 
@@ -393,7 +369,7 @@ It is useful for personal or hobby deployments without a domain. A custom R2 dom
 
 The phone Worker does not expose a directory or landing page. Only a full tokenized path is meaningful.
 
-## 9. Repository layout
+## 8. Repository layout
 
 ```text
 src/
@@ -410,7 +386,7 @@ worker/wrangler.upload.jsonc    upload Worker config
 .github/workflows/deploy.yml    two-Worker deployment
 ```
 
-## 10. Pre-production checklist
+## 9. Pre-production checklist
 
 - [ ] Replace every `YOUR_*` placeholder.
 - [ ] Bind both Workers to the same R2 bucket.
@@ -423,6 +399,6 @@ worker/wrangler.upload.jsonc    upload Worker config
 - [ ] Confirm anonymous admin API requests do not return asset data.
 - [ ] For production, consider a custom domain, private objects, and signed URLs.
 
-## 11. License
+## 10. License
 
 The code and documentation are released under the MIT License. Demo images and screenshots are included for documentation and testing; replace them with assets you own before using the repository for real data.
