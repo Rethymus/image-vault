@@ -42,7 +42,7 @@ export const seededAssets = [
     url: assetPath("readme-setup.png"),
   },
   {
-    id: "asset-architecture",
+    id: "asset-dashboard",
     name: "dashboard-dark.png",
     type: "PNG",
     size: "1.4 MB",

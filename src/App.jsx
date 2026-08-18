@@ -98,7 +98,6 @@ function humanError(error, t) {
 
 export default function App() {
   const [assets, setAssets] = useState(() => apiMode === "worker" ? [] : seededAssets);
-  const [remoteCount, setRemoteCount] = useState(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [queue, setQueue] = useState([]);
   const [cleanMetadata, setCleanMetadata] = useState(true);
@@ -126,8 +125,8 @@ export default function App() {
   const t = useMemo(() => createTranslator(language), [language]);
   const translatorRef = useRef(t);
   const resolvedTheme = theme === "system" ? systemTheme : theme;
-  const assetCount = remoteCount ?? (isRemote ? 0 : 12 + Math.max(0, assets.length - seededAssets.length));
-  const visibleAssets = useMemo(() => assets.slice(0, 12), [assets]);
+  const assetCount = assets.length;
+  const visibleAssets = assets;
 
   useEffect(() => {
     translatorRef.current = t;
@@ -164,7 +163,6 @@ export default function App() {
       .then((remoteAssets) => {
         if (!cancelled) {
           setAssets(remoteAssets);
-          setRemoteCount(remoteAssets.length);
         }
       })
       .catch((error) => showToast(humanError(error, translatorRef.current), "error"));
@@ -183,7 +181,6 @@ export default function App() {
         .then((remoteAssets) => {
           if (!cancelled) {
             setAssets(remoteAssets);
-            setRemoteCount(remoteAssets.length);
           }
         })
         .catch(() => undefined);
@@ -327,7 +324,6 @@ export default function App() {
 
       setQueue((current) => current.map((candidate) => candidate.id === item.id ? { ...candidate, status: "ready", progress: 100 } : candidate));
       setAssets((current) => [asset, ...current]);
-      setRemoteCount((current) => current === null ? current : current + 1);
       return asset;
     } catch (error) {
       setQueue((current) => current.map((candidate) => candidate.id === item.id ? { ...candidate, status: "error", error: humanError(error, t) } : candidate));
@@ -375,7 +371,6 @@ export default function App() {
         URL.revokeObjectURL(deleteTarget.image);
       }
       setAssets((current) => current.filter((asset) => asset.id !== deleteTarget.id));
-      setRemoteCount((current) => current === null ? current : Math.max(0, current - 1));
       setSelectedAsset(null);
       setDeleteTarget(null);
       setMenuId(null);
@@ -496,7 +491,7 @@ export default function App() {
 
         <section className="recent-section" aria-labelledby="recent-title">
           <div className="section-heading">
-            <h2 id="recent-title">{t("recent")}</h2>
+            <h2 id="recent-title">{t("allAssets")}</h2>
           </div>
           {visibleAssets.length ? (
             <div className="asset-grid">
