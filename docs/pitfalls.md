@@ -247,6 +247,26 @@ Report anonymous protection and authenticated behavior separately. Ask the owner
 
 将匿名保护和登录后行为分开报告。最后的临时图片测试应由 owner 在已登录 Access 的浏览器中完成；不要绕过 Access，也不要索要 token。
 
+## 13. CI environment overrides can reintroduce a fixed bug
+
+### Symptom / 症状
+
+The local guarded Worker build passed, but the GitHub Actions dry-run failed because it still saw the old demo image origin.
+
+本地受保护的 Worker 构建已经通过，但 GitHub Actions 的 dry-run 仍然因为旧的演示图片 origin 失败。
+
+### Root cause / 根因
+
+The workflow passed its own `VITE_PUBLIC_IMAGE_ORIGIN` value to the command. That value still used `https://img.example.com`, so the CI environment overrode the safer fallback in `build:worker`.
+
+工作流自己向命令传入了 `VITE_PUBLIC_IMAGE_ORIGIN`，但这个值还残留 `https://img.example.com`；CI 环境变量覆盖了 `build:worker` 的安全占位符。
+
+### Guard / 防线
+
+Keep one canonical placeholder and use it consistently in the build step, dry-run step, and deploy step. Remove redundant `VITE_API_MODE` overrides when the dedicated build script owns that invariant. Test the exact GitHub Actions environment, not only the local default.
+
+构建、dry-run 和部署步骤必须统一使用同一个安全占位符。由专用构建脚本负责 `VITE_API_MODE` 时，不要在 workflow 中重复覆盖。不能只测试本地默认值，还要测试 Action 的完整环境变量组合。
+
 ## Regression checklist / 回归清单
 
 - [ ] Worker bundle forces `worker` API mode and contains the approved image origin.
@@ -258,3 +278,4 @@ Report anonymous protection and authenticated behavior separately. Ask the owner
 - [ ] Root upload Worker 404 is treated as expected.
 - [ ] R2 objects are never deleted during ordinary build/deploy verification.
 - [ ] Private authenticated upload/delete is not claimed until tested with a disposable file.
+- [ ] CI build, dry-run, and deploy steps use the same non-demo image-origin fallback.
