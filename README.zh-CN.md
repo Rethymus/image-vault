@@ -23,20 +23,24 @@
 
 ## 0. 交给 Agent 的复刻入口
 
-如果目标是让 Agent 一比一复刻整个部署，不要只把某个代码文件丢给它。请让它先读取：
+现在不需要先拉取整个仓库。直接把下面这段话交给 Agent；它会先读取远程自包含实现说明，再在用户当前工作区内复刻，而不是把本仓库当成必须复制的源码目录：
 
-1. [`AGENTS.md`](AGENTS.md)：安全边界、停止条件和必须验证的命令；
-2. [`AGENT_PROMPT.md`](AGENT_PROMPT.md)：可直接复制给 Agent 的启动指令；
-3. 本文件与 [`README.en.md`](README.en.md)：完整双语背景和取舍；
-4. [`docs/agent-reproduction.md`](docs/agent-reproduction.md)：分阶段 runbook、输入清单、验收矩阵和 GitHub Actions 行为。
+```text
+请在当前工作区复刻 Image Vault 图片工作站。先读取并遵守这份远程实现说明：
+https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+
+不要克隆整个仓库。先只读检查，再本地实现和 dry-run；没有得到我对具体云端变更的明确授权，不得创建/删除 R2、部署 Worker、修改 Cloudflare Access、删除真实资源或请求任何 secret。完成后按说明中的验收矩阵报告证据。
+```
+
+这份入口文档已经包含：完整工作站目标、Apple 风格浅色/深色/系统外观、中英切换、两 Worker + R2 + Access 架构、API 合同、公开 Pages 演示边界、构建不变量、安全停止条件和验收矩阵。只有当前阶段需要时，Agent 才读取 [`llms.txt`](llms.txt)、[`docs/pitfalls.md`](docs/pitfalls.md) 和 [`docs/agent-reproduction.md`](docs/agent-reproduction.md)。
 
 Agent 的默认顺序必须是：
 
 ```text
-只读检查 → 找出 YOUR_* → 本地 dry-run → 类型检查/构建 → 得到授权 → 创建云资源 → 线上验收
+远程入口 → 当前工作区只读检查 → 找出 YOUR_* → 本地实现 → dry-run/浏览器验收 → 明确授权 → 云端变更 → 线上验收
 ```
 
-Agent 不得猜测生产域名、bucket、Access audience 或 owner 邮箱，也不得让用户把 secret 粘贴到聊天或源文件中。
+Agent 不得猜测生产域名、bucket、Access audience 或 owner 邮箱，也不得让用户把 secret 粘贴到聊天或源文件中。真实踩坑和防止复现的检查项见 [`docs/pitfalls.md`](docs/pitfalls.md)。
 
 ## 工作站截图与辅助上传状态
 
@@ -280,7 +284,7 @@ npx wrangler secret put OWNER_EMAILS --config worker/wrangler.admin.jsonc
 npm run worker:deploy
 ```
 
-管理 Worker 会同时托管 Vite 构建后的静态管理界面，并处理 `/api/*`。如果使用 `npm run build`，确保构建环境中：
+管理 Worker 会同时托管 Vite 构建后的静态管理界面，并处理 `/api/*`。实际发布请使用 `npm run build:worker`，它会强制注入 Worker API 模式、同源 `/api/*` 和图片 origin，并在 bundle 中拒绝 demo 构建。普通 `npm run build` 只用于 GitHub Pages 浏览器演示。
 
 ```text
 VITE_API_MODE=worker
@@ -305,7 +309,7 @@ VITE_PUBLIC_IMAGE_ORIGIN=https://YOUR_BUCKET_ID.r2.dev
 
 ```powershell
 npm run worker:typecheck
-npm run build
+npm run build:worker
 npm run worker:dry-run
 npm run worker:upload:dry-run
 ```
@@ -331,6 +335,8 @@ Repository variable:
 ```
 
 API Token 要使用最小权限，不要使用 Cloudflare Global API Key。第一次部署建议先在本地完成，并确认两个 Worker 的 bindings、Access 和 R2 地址无误，再在 Actions 页面手动运行并选择 `deploy=true`。公开仓库的 fork 可以只使用验证 job，不需要拥有你的 Cloudflare 凭据。
+
+本次实际遇到的持久化、mock 数量、R2 分页、错误图片 origin、重复 React ID 和 Action 误判等问题，统一记录在 [`docs/pitfalls.md`](docs/pitfalls.md)，复刻时必须作为回归清单执行。
 
 ## 7. 临时二维码的工作方式
 
@@ -367,6 +373,8 @@ i/<43-character-asset-token>
 随机令牌由 Web Crypto `crypto.getRandomValues()` 生成，不使用 `Math.random()`。二维码的令牌是临时上传权限，不是图片本身的访问令牌。关闭会话只删除会话对象和上传标记；图片对象仍由 owner 管理。
 
 ## 8. 关键踩坑
+
+完整的双语踩坑记录、根因、修复方式和回归检查见 [`docs/pitfalls.md`](docs/pitfalls.md)。下面保留关键摘要，方便在 README 内快速浏览。
 
 ### Private repo 不会自动让 Pages 私有
 

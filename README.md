@@ -6,20 +6,27 @@ A reproducible personal image workstation for Cloudflare: the admin surface is o
 
 ## 先给 Agent / Start with an Agent
 
-本仓库不是只放一份“能运行的代码”，还把复刻入口、停止条件和验收标准写进仓库：
+本仓库采用 Agent-Reach 式的“远程入口”设计：不需要先把整个仓库拉下来。直接把下面这一句话和 raw URL 丢给 Codex、Claude Code、Cursor、Windsurf 或其他实现 Agent，Agent 应该在用户当前工作区内读取说明并实现工作站：
 
-This repository includes an agent entrypoint, safety gates, and an acceptance matrix—not just source code:
-
-- [`AGENT_PROMPT.md`](AGENT_PROMPT.md)：复制给 Codex、Claude Code、Cursor、Windsurf 等 Agent 的启动指令；
-- [`AGENTS.md`](AGENTS.md)：仓库级执行约定与不可违反的安全边界；
-- [`docs/agent-reproduction.md`](docs/agent-reproduction.md)：从只读检查到线上验收的中英双语 runbook；
-- [`README.zh-CN.md`](README.zh-CN.md) / [`README.en.md`](README.en.md)：完整的中文与英文说明。
-
-Recommended first message to an implementation agent:
+This repository uses an Agent-Reach-style remote entrypoint. The implementation Agent does not need to clone the whole repository first. Give it the one-line request and raw URL below; it should read the brief and build the workstation in the user's current workspace:
 
 ```text
-Read AGENTS.md, AGENT_PROMPT.md, README.md, README.zh-CN.md, README.en.md, and docs/agent-reproduction.md first. Start with read-only inspection and local dry-runs. Do not create, delete, deploy, or change Access policies until I explicitly approve that phase. Never ask for secrets in chat or source files.
+请在当前工作区复刻 Image Vault 图片工作站，先读取并遵守：
+https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
 ```
+
+```text
+Reproduce the Image Vault workstation in the current workspace. Read and follow:
+https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+```
+
+入口文档本身是自包含的，包含产品契约、两 Worker + R2 + Access 架构、UI 设计要求、API 合同、构建不变量、安全边界、执行阶段和验收矩阵。Agent 只应按当前阶段读取补充文档，不应把“先克隆整个仓库”当作前置条件。
+
+The remote brief is self-contained: it includes the product contract, Workers + R2 + Access architecture, UI requirements, API contract, build invariants, safety gates, execution phases, and acceptance matrix. Agents should fetch extra documents only when a phase needs them, not clone the entire repository as a prerequisite.
+
+按需读取：[`llms.txt`](llms.txt) 是机器友好的索引；[`AGENTS.md`](AGENTS.md) 是 checkout 后的本地执行约定；[`docs/pitfalls.md`](docs/pitfalls.md) 记录真实踩坑和回归防线；[`docs/agent-reproduction.md`](docs/agent-reproduction.md) 是详细中英 runbook。
+
+Read as needed: [`llms.txt`](llms.txt) is the machine-friendly index; [`AGENTS.md`](AGENTS.md) is the local contract after a checkout; [`docs/pitfalls.md`](docs/pitfalls.md) records real failures and regression guards; [`docs/agent-reproduction.md`](docs/agent-reproduction.md) is the detailed bilingual runbook.
 
 ## 这是什么 / What this is
 
@@ -138,7 +145,7 @@ The current design moves runtime behavior to Workers, objects to R2, and the own
 npm ci
 npm run worker:types
 npm run worker:typecheck
-npm run build
+npm run build:worker
 npm run worker:upload:dry-run
 npm run worker:dry-run
 ```
@@ -146,6 +153,10 @@ npm run worker:dry-run
 Then follow [`docs/agent-reproduction.md`](docs/agent-reproduction.md). Replace only the `YOUR_*` placeholders with owner-supplied values. The public repository intentionally contains no production Cloudflare names or secrets.
 
 然后按复刻手册执行：先创建/配置 R2，再部署公开上传 Worker，配置管理 Worker secrets，最后给管理 Worker 配置 Access。没有自定义域名时，直接使用 `workers.dev` 和 `r2.dev` 即可。
+
+The Pages showcase is a separate demo build. Run plain `npm run build` only with `VITE_API_MODE=demo` and the Pages base path; never reuse that output for `vault-admin`.
+
+GitHub Pages 效果展示是独立的 demo 构建。普通 `npm run build` 只能配合 `VITE_API_MODE=demo` 和 Pages base path 使用，不能把这个产物拿去发布 `vault-admin`。
 
 ## GitHub Actions：为什么之前失败、现在怎么运行 / GitHub Actions behavior
 
@@ -178,7 +189,7 @@ This keeps the public reference repository green for forks while allowing the pr
 - 图片直链是 bearer URL，不是强私有授权；
 - 关闭二维码只会阻止后续上传，不会自动删除已经上传的图片。
 
-See [`SECURITY.md`](SECURITY.md), [`docs/architecture.md`](docs/architecture.md), and [`docs/troubleshooting.md`](docs/troubleshooting.md) for the detailed boundary and known trade-offs.
+See [`SECURITY.md`](SECURITY.md), [`docs/architecture.md`](docs/architecture.md), [`docs/pitfalls.md`](docs/pitfalls.md), and [`docs/troubleshooting.md`](docs/troubleshooting.md) for the detailed boundary, real failure history, and known trade-offs.
 
 ## License
 

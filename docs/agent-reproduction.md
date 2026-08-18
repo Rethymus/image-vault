@@ -1,25 +1,35 @@
 # Agent reproduction runbook / Agent 复刻运行手册
 
-This is the deterministic runbook for reproducing the Cloudflare private image-link manager from this repository. It is written so a coding agent can inspect, validate, configure, and—only after explicit approval—deploy the same architecture.
+This is the deterministic runbook for reproducing the Cloudflare private image-link manager. An Agent can use it from a checkout, but the preferred path is remote-first: read the raw `AGENT_PROMPT.md` implementation brief and build in the user's current workspace without cloning this repository.
 
-本文是从本仓库一比一复刻 Cloudflare 图片链接管理器的确定性手册。它要求 Agent 先检查、再验证、再配置，并且只有得到明确授权后才能部署同样的架构。
+本文是从远程说明或本仓库一比一复刻 Cloudflare 图片链接管理器的确定性手册。推荐先读取 raw `AGENT_PROMPT.md`，不要求 Agent 克隆整个仓库；它仍然必须先检查、再验证、再配置，并且只有得到明确授权后才能部署同样的架构。
 
 The repository also contains an optional public GitHub Pages showcase at [rethymus.github.io/image-vault](https://rethymus.github.io/image-vault/). The showcase is intentionally separate from the Cloudflare end state: it is a browser-only build for visual and interaction review, has no persistence, and must not be used with personal documents. See [`github-pages-demo.md`](github-pages-demo.md) for its own acceptance checks.
 
 本仓库还包含一个可选的公开 GitHub Pages 效果展示页：[rethymus.github.io/image-vault](https://rethymus.github.io/image-vault/)。它与 Cloudflare 生产终态分开：只用于审阅视觉和交互，完全在浏览器内运行，没有持久化，不能上传个人敏感文件。它的验收标准见 [`github-pages-demo.md`](github-pages-demo.md)。
 
+The failure history and regression guards are recorded in [`pitfalls.md`](pitfalls.md). Read it when implementing or reviewing the data source, build mode, QR boundary, or CI workflow.
+
+真实失败记录和回归防线见 [`pitfalls.md`](pitfalls.md)。实现或审查数据源、构建模式、二维码边界和 CI 工作流时必须对照它。
+
 ## 0. Give the repository to an Agent / 把仓库交给 Agent
+
+The preferred entrypoint is the raw file below. It is deliberately self-contained, so an Agent can receive one URL and implement in the current workspace without cloning this repository:
+
+```text
+https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+```
 
 Start with the copyable prompt in [`AGENT_PROMPT.md`](../AGENT_PROMPT.md). The short version is:
 
 ```text
-Read AGENTS.md, AGENT_PROMPT.md, README.md, and docs/agent-reproduction.md first. Reproduce this repository's Cloudflare Workers + R2 image vault in safe phases. Begin with read-only inspection and local dry-runs. Do not create, delete, deploy, or change Access policies until I explicitly approve that exact phase. Never ask me to paste secrets into chat or source files. Stop on missing placeholders and report a precise checklist.
+Read the remote Image Vault implementation brief first, inspect the current workspace, and reproduce the Cloudflare Workers + R2 image vault there. Do not clone the whole repository. Begin with read-only inspection and local dry-runs. Do not create, delete, deploy, or change Access policies until I explicitly approve that exact phase. Never ask me to paste secrets into chat or source files. Stop on missing placeholders and report a precise checklist.
 ```
 
 把仓库交给 Agent 后，第一句话可以直接使用：
 
 ```text
-先读取 AGENTS.md、AGENT_PROMPT.md、README.md 和 docs/agent-reproduction.md。按本仓库的 Cloudflare Workers + R2 图片管理方案分阶段安全复刻：先只读检查和本地 dry-run；没有得到我对具体阶段的明确授权，不得创建、删除、部署资源或修改 Access 策略；不得让我把 secret 粘贴到聊天或源文件；遇到占位符就停下并列出准确的缺项清单。
+先读取 Image Vault 的远程实现说明，检查当前工作区并在当前工作区复刻 Cloudflare Workers + R2 图片管理方案；不要克隆整个仓库。先只读检查和本地 dry-run；没有得到我对具体阶段的明确授权，不得创建、删除、部署资源或修改 Access 策略；不得让我把 secret 粘贴到聊天或源文件；遇到占位符就停下并列出准确的缺项清单。
 ```
 
 ## 1. Expected end state / 目标终态
@@ -78,12 +88,12 @@ Agent 不得自行猜测这些值。任何 secret 只能通过 Wrangler secret�
 npm ci
 npm run worker:types
 npm run worker:typecheck
-npm run build
+npm run build:worker
 npm run worker:upload:dry-run
 npm run worker:dry-run
 ```
 
-The build must use the Worker API mode. If the public image origin is not known yet, use a local placeholder; do not silently substitute a real origin.
+The Worker build must use the dedicated `npm run build:worker` command. It must force Worker API mode, same-origin `/api/*`, and an approved image origin or explicit placeholder. If the public image origin is not known yet, use a local placeholder; do not silently substitute a real origin. Use plain `npm run build` only for the separate non-persistent Pages demo.
 
 ### Phase C — Create and configure R2 / 阶段 C：创建并配置 R2
 
@@ -149,6 +159,9 @@ Run the flow with a disposable test image, not a real identity document:
 | more than five files | rejected after the limit |
 | session timeout / revoke | 410 and no further upload |
 | admin workstation | asset appears after polling |
+| private list and count | all R2 pages are represented; count equals the returned asset array |
+| private upload/delete refresh | upload survives refresh; deleted asset stays gone after refresh |
+| public demo state | upload/delete changes the browser state consistently; a refresh resets the demo seed |
 | secret scan | no production secret in source or build |
 
 ## 5. GitHub Actions behavior / GitHub Actions 行为

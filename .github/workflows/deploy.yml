@@ -43,11 +43,10 @@ jobs:
       - name: Validate Worker types
         run: npm run worker:types && npm run worker:typecheck
 
-      - name: Build admin UI
-        run: npm run build
+      - name: Build Worker UI
+        run: npm run build:worker
         env:
-          VITE_API_MODE: worker
-          VITE_PUBLIC_IMAGE_ORIGIN: ${{ vars.PUBLIC_IMAGE_ORIGIN || 'https://img.example.com' }}
+          VITE_PUBLIC_IMAGE_ORIGIN: ${{ vars.PUBLIC_IMAGE_ORIGIN || 'https://YOUR_BUCKET_ID.r2.dev' }}
 
       - name: Dry-run public phone upload Worker
         run: npm run worker:upload:dry-run
@@ -78,6 +77,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Build Worker UI
+        run: npm run build:worker
+        env:
+          VITE_PUBLIC_IMAGE_ORIGIN: ${{ vars.PUBLIC_IMAGE_ORIGIN || 'https://YOUR_BUCKET_ID.r2.dev' }}
 
       - name: Check deployment credentials
         id: credentials
