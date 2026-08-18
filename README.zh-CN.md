@@ -1,4 +1,20 @@
-# Image Vault：Cloudflare 图片工作站完整中文说明
+<div align="center">
+
+# 🗂️ Image Vault
+
+### 给你的 Agent 一套可复刻的 Cloudflare 图片工作站
+
+管理端私有 · 图片按完整链接公开 · 随机不可枚举 URL · 临时二维码手机上传
+
+[快速开始](#0-交给-agent-的安装与更新入口) · [English guide](README.en.md) · [GitHub Pages 演示](https://rethymus.github.io/image-vault/)
+
+[推荐项目：Agent-Reach](https://github.com/Panniantong/Agent-Reach)
+
+</div>
+
+---
+
+这是 Image Vault 的完整中文说明。
 
 这是一个面向个人、小型作品集和 README 配图场景的图片链接管理器。它不是传统意义上的“完全私有网盘”，而是：
 
@@ -23,7 +39,7 @@
 
 ## 0. 交给 Agent 的安装与更新入口
 
-参考 Agent-Reach 的做法，不要求使用者先拉取整个仓库。直接把一句话复制给 Agent；远程入口会被读取，工作站会在 Agent 当前已经打开的工作区内复刻：
+参考 [Agent-Reach](https://github.com/Panniantong/Agent-Reach) 的远程入口做法，不要求使用者先拉取整个仓库。直接把一句话复制给 Agent；远程入口会被读取，工作站会在 Agent 当前已经打开的工作区内复刻：
 
 ```text
 帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
@@ -67,11 +83,16 @@ Agent 不得猜测生产域名、bucket、Access audience 或 owner 邮箱，也
 
 ![中文二维码面板](docs/assets/screenshots/zh/qr-phone-upload.png)
 
-![中文手机端浅色上传完成](docs/assets/screenshots/zh/phone-upload-success.png)
+<div align="center">
+<table>
+<tr>
+<td align="center"><strong>浅色模式</strong><br><img src="docs/assets/screenshots/zh/phone-upload-success.png" width="260" alt="中文手机端浅色上传完成"></td>
+<td align="center"><strong>深色模式</strong><br><img src="docs/assets/screenshots/zh/phone-upload-dark.png" width="260" alt="中文手机端深色上传完成"></td>
+</tr>
+</table>
+</div>
 
-![中文手机端深色上传完成](docs/assets/screenshots/zh/phone-upload-dark.png)
-
-中英文文档中的四张手机端截图统一使用 `390 × 844` 的移动端画布；深色状态跟随手机系统的深色外观渲染。
+中英文文档中的所有手机端截图统一使用 `390 × 844` 的移动端画布，并以相同展示宽度居中并列；深色状态跟随手机系统的深色外观渲染。
 
 二维码截图只用于文档演示，不是生产上传通道；不要把生产二维码、临时 token、Access 凭据或个人文件放进公开仓库。
 
