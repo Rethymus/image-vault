@@ -1,8 +1,8 @@
 # Agent reproduction runbook / Agent 复刻运行手册
 
-This is the deterministic runbook for reproducing the Cloudflare private image-link manager. An Agent can use it from a checkout, but the preferred path is remote-first: read the raw `AGENT_PROMPT.md` implementation brief and build in the user's current workspace without cloning this repository.
+This is the deterministic runbook for reproducing the Cloudflare private image-link manager. An Agent can use it from a checkout, but the preferred path is remote-first: give the raw `docs/install.md` instruction to the Agent and build in the user's current workspace without cloning this repository. For an existing installation, use raw `docs/update.md`.
 
-本文是从远程说明或本仓库一比一复刻 Cloudflare 图片链接管理器的确定性手册。推荐先读取 raw `AGENT_PROMPT.md`，不要求 Agent 克隆整个仓库；它仍然必须先检查、再验证、再配置，并且只有得到明确授权后才能部署同样的架构。
+本文是从远程说明或本仓库一比一复刻 Cloudflare 图片链接管理器的确定性手册。推荐先把 raw `docs/install.md` 的一句话入口交给 Agent，不要求 Agent 克隆整个仓库；已有实现更新时使用 raw `docs/update.md`。它仍然必须先检查、再验证、再配置，并且只有得到明确授权后才能部署同样的架构。
 
 The repository also contains an optional public GitHub Pages showcase at [rethymus.github.io/image-vault](https://rethymus.github.io/image-vault/). The showcase is intentionally separate from the Cloudflare end state: it is a browser-only build for visual and interaction review, has no persistence, and must not be used with personal documents. See [`github-pages-demo.md`](github-pages-demo.md) for its own acceptance checks.
 
@@ -14,13 +14,21 @@ The failure history and regression guards are recorded in [`pitfalls.md`](pitfal
 
 ## 0. Give the repository to an Agent / 把仓库交给 Agent
 
-The preferred entrypoint is the raw file below. It is deliberately self-contained, so an Agent can receive one URL and implement in the current workspace without cloning this repository:
+The preferred installation entrypoint is the raw file below. It is deliberately self-contained, so an Agent can receive one URL and implement in the current workspace without cloning this repository:
 
 ```text
-https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
-Start with the copyable prompt in [`AGENT_PROMPT.md`](../AGENT_PROMPT.md). The short version is:
+For an existing installation, use this update entrypoint:
+
+```text
+https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
+
+The detailed technical contract remains in [`AGENT_PROMPT.md`](../AGENT_PROMPT.md). The human-facing one-line prompts are in [`docs/install.md`](install.md) and [`docs/update.md`](update.md).
+
+The short version is:
 
 ```text
 Read the remote Image Vault implementation brief first, inspect the current workspace, and reproduce the Cloudflare Workers + R2 image vault there. Do not clone the whole repository. Begin with read-only inspection and local dry-runs. Do not create, delete, deploy, or change Access policies until I explicitly approve that exact phase. Never ask me to paste secrets into chat or source files. Stop on missing placeholders and report a precise checklist.

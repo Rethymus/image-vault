@@ -21,18 +21,33 @@
 
 静态资源和部署边界见 [`docs/github-pages-demo.md`](docs/github-pages-demo.md)。首次启用仓库 Pages 时，在 `Settings → Pages` 中选择 `GitHub Actions`。
 
-## 0. 交给 Agent 的复刻入口
+## 0. 交给 Agent 的安装与更新入口
 
-现在不需要先拉取整个仓库。直接把下面这段话交给 Agent；它会先读取远程自包含实现说明，再在用户当前工作区内复刻，而不是把本仓库当成必须复制的源码目录：
+参考 Agent-Reach 的做法，不要求使用者先拉取整个仓库。直接把一句话复制给 Agent；远程入口会被读取，工作站会在 Agent 当前已经打开的工作区内复刻：
 
 ```text
-请在当前工作区复刻 Image Vault 图片工作站。先读取并遵守这份远程实现说明：
-https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
-
-不要克隆整个仓库。先只读检查，再本地实现和 dry-run；没有得到我对具体云端变更的明确授权，不得创建/删除 R2、部署 Worker、修改 Cloudflare Access、删除真实资源或请求任何 secret。完成后按说明中的验收矩阵报告证据。
+帮我复刻 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
 ```
 
-这份入口文档已经包含：完整工作站目标、Apple 风格浅色/深色/系统外观、中英切换、两 Worker + R2 + Access 架构、API 合同、公开 Pages 演示边界、构建不变量、安全停止条件和验收矩阵。只有当前阶段需要时，Agent 才读取 [`llms.txt`](llms.txt)、[`docs/pitfalls.md`](docs/pitfalls.md) 和 [`docs/agent-reproduction.md`](docs/agent-reproduction.md)。
+已经复刻过、需要同步修复或更新时：
+
+```text
+帮我更新当前工作区的 Image Vault 图片工作站：https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
+
+这两个 raw 文档就是给 Agent 的直接入口，不是要求 Agent 执行 `git clone` 的仓库下载链接。安装入口包含完整工作站目标、Apple 风格浅色/深色/系统外观、中英切换、两 Worker + R2 + Access 架构、API 合同、公开 Pages 演示边界、构建不变量、安全停止条件和验收矩阵；更新入口专门检查已有实现是否重新退回 mock、演示模式或错误图片 origin。
+
+英文入口：
+
+```text
+Help me reproduce the Image Vault workstation: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/install.md
+```
+
+```text
+Update the Image Vault workstation in the current workspace: https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/update.md
+```
+
+只有当前阶段需要时，Agent 才读取 [`llms.txt`](llms.txt)、[`docs/pitfalls.md`](docs/pitfalls.md) 和 [`docs/agent-reproduction.md`](docs/agent-reproduction.md)；完整技术契约仍保留在 [`AGENT_PROMPT.md`](AGENT_PROMPT.md)。
 
 Agent 的默认顺序必须是：
 
