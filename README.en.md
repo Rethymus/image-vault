@@ -15,6 +15,14 @@ The stack is:
 - React + Vite for the admin UI;
 - `qrcode` for browser-side QR rendering.
 
+## GitHub Pages showcase (demo only)
+
+The public repository includes a separate [GitHub Pages showcase](https://rethymus.github.io/image-vault/). It does not connect to Cloudflare. Instead, it builds with `VITE_API_MODE=demo` and presents the workstation, all six concept images, light/dark/system appearance, bilingual UI, and the QR phone-upload flow entirely in the browser.
+
+The showcase supports file selection or drag-and-drop, simulated upload progress, QR generation, a mobile upload page, and a completed local upload state. It has no persistence: files are not sent to R2, a Worker, GitHub, or a database, and they are not transferred back from the phone to the desktop across devices. Refreshing or closing the page clears the demo state. Do not upload a real identity document, original ID photo, unreleased résumé, or other sensitive file to this public page.
+
+See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for the asset map and deployment boundary. On first setup, choose `GitHub Actions` under `Settings → Pages`.
+
 ## 0. Agent reproduction entrypoint
 
 If the goal is a one-to-one reproduction, do not hand an agent only one source file. Ask it to read these repository entrypoints first:

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AssetCard } from "./components/AssetCard";
 import { ConfirmDialog } from "./components/ConfirmDialog";
 import { DetailSheet } from "./components/DetailSheet";
+import { DemoUploadPage } from "./components/DemoUploadPage";
 import { Icon } from "./components/Icon";
 import { PhoneUploadSheet } from "./components/PhoneUploadSheet";
 import { Preferences } from "./components/Preferences";
@@ -22,6 +23,32 @@ import { createTranslator, getInitialLanguage, getInitialTheme, resolveSystemThe
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const publicImageOrigin = import.meta.env.VITE_PUBLIC_IMAGE_ORIGIN || "https://img.example.com";
+const demoUploadParams = typeof window === "undefined" ? null : new URLSearchParams(window.location.search);
+const demoUploadMode = Boolean(demoUploadParams?.has("demoUpload"));
+const demoUploadExpiresAt = Number(demoUploadParams?.get("expires")) || Date.now() + (10 * 60 * 1000);
+
+function getDemoHomeUrl() {
+  if (typeof window === "undefined") return "/";
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.hash = "";
+  return url.toString();
+}
+
+function createDemoUploadSession(language) {
+  const expiresAt = Date.now() + (10 * 60 * 1000);
+  const url = new URL(getDemoHomeUrl());
+  url.searchParams.set("demoUpload", createToken());
+  url.searchParams.set("expires", String(expiresAt));
+  url.searchParams.set("lang", language);
+  return {
+    demo: true,
+    expiresAt,
+    maxFiles: 3,
+    token: url.searchParams.get("demoUpload"),
+    uploadUrl: url.toString(),
+  };
+}
 
 function makeQueueItem(file) {
   return {
@@ -81,7 +108,10 @@ export default function App() {
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [toast, setToast] = useState(null);
-  const [language, setLanguage] = useState(getInitialLanguage);
+  const [language, setLanguage] = useState(() => {
+    const requestedLanguage = demoUploadParams?.get("lang");
+    return requestedLanguage === "zh" || requestedLanguage === "en" ? requestedLanguage : getInitialLanguage();
+  });
   const [theme, setTheme] = useState(getInitialTheme);
   const [systemTheme, setSystemTheme] = useState(resolveSystemTheme);
   const [phoneUploadOpen, setPhoneUploadOpen] = useState(false);
@@ -92,6 +122,7 @@ export default function App() {
   const phoneSessionRequestRef = useRef(0);
 
   const isRemote = apiMode === "worker";
+  const isDemo = !isRemote;
   const t = useMemo(() => createTranslator(language), [language]);
   const translatorRef = useRef(t);
   const resolvedTheme = theme === "system" ? systemTheme : theme;
@@ -196,6 +227,15 @@ export default function App() {
     const previousToken = replace ? phoneUploadSession?.token : null;
     setPhoneSessionCreating(true);
 
+    if (!isRemote) {
+      window.setTimeout(() => {
+        if (requestId !== phoneSessionRequestRef.current) return;
+        setPhoneUploadSession(createDemoUploadSession(language));
+        setPhoneSessionCreating(false);
+      }, 260);
+      return;
+    }
+
     try {
       if (previousToken) await revokeRemoteUploadSession(previousToken);
       const nextSession = await createRemoteUploadSession();
@@ -212,7 +252,6 @@ export default function App() {
   }
 
   function openPhoneUpload() {
-    if (!isRemote) return;
     setPhoneUploadOpen(true);
     if (!phoneUploadSession && !phoneSessionCreating) void createPhoneUploadSession();
   }
@@ -223,7 +262,7 @@ export default function App() {
     setPhoneUploadOpen(false);
     setPhoneUploadSession(null);
     setPhoneSessionCreating(false);
-    if (token) await revokeRemoteUploadSession(token).catch(() => undefined);
+    if (isRemote && token) await revokeRemoteUploadSession(token).catch(() => undefined);
   }
 
   async function copyTemporaryUploadLink(value) {
@@ -283,7 +322,7 @@ export default function App() {
         setQueue((current) => current.map((candidate) => candidate.id === item.id ? { ...candidate, progress: 68 } : candidate));
         await new Promise((resolve) => window.setTimeout(resolve, 280));
         retainedPreviewUrls.current.add(item.previewUrl);
-        asset = createLocalAsset(uploadFile, item.previewUrl, publicImageOrigin, item.name);
+        asset = createLocalAsset(uploadFile, item.previewUrl, isDemo ? null : publicImageOrigin, item.name);
       }
 
       setQueue((current) => current.map((candidate) => candidate.id === item.id ? { ...candidate, status: "ready", progress: 100 } : candidate));
@@ -317,7 +356,7 @@ export default function App() {
     try {
       const updated = isRemote
         ? await rotateRemoteAsset(asset.id)
-        : { ...asset, url: `${publicImageOrigin}/i/${createToken()}` };
+        : { ...asset, url: asset.local ? asset.image : asset.url };
       setAssets((current) => current.map((candidate) => candidate.id === asset.id ? { ...candidate, ...updated } : candidate));
       setSelectedAsset((current) => current?.id === asset.id ? { ...current, ...updated } : current);
       setMenuId(null);
@@ -353,6 +392,20 @@ export default function App() {
     return handleCopy(asset, action);
   }
 
+  if (demoUploadMode) {
+    return (
+      <DemoUploadPage
+        expiresAt={demoUploadExpiresAt}
+        homeUrl={getDemoHomeUrl()}
+        language={language}
+        onLanguageChange={setLanguage}
+        onThemeChange={setTheme}
+        t={t}
+        theme={theme}
+      />
+    );
+  }
+
   return (
     <div className={`app-shell ${uploadOpen || selectedAsset || deleteTarget || phoneUploadOpen ? "has-overlay" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={(event) => {
       event.preventDefault();
@@ -363,7 +416,7 @@ export default function App() {
           <a className="brand" href="#top" aria-label={t("brandHome")}>Vault</a>
           <div className="topbar-actions">
             <Preferences language={language} onLanguageChange={setLanguage} onThemeChange={setTheme} t={t} theme={theme} />
-            {isRemote ? (
+            {isRemote || isDemo ? (
               <button aria-label={t("phoneUpload")} className="button button-secondary topbar-phone-upload" onClick={openPhoneUpload} type="button">
                 <Icon name="qr" size={17} strokeWidth={1.7} />
                 <span>{t("phoneUpload")}</span>
@@ -383,8 +436,20 @@ export default function App() {
             <h1 id="page-title">{t("images")}</h1>
             <p>{t("assetCount", { count: assetCount, countLabel: assetCount === 1 ? t("assetSingular") : t("assetPlural") })}</p>
           </div>
-          {isRemote ? <span className="connection-status"><span className="status-dot" /> {t("connected")}</span> : null}
+          {isRemote ? <span className="connection-status"><span className="status-dot" /> {t("connected")}</span> : (
+            <span className="connection-status demo-connection-status"><span className="status-dot" /> {t("demoModeLabel")}</span>
+          )}
         </section>
+
+        {isDemo ? (
+          <aside className="demo-banner" role="note">
+            <span className="demo-banner-icon"><Icon name="spark" size={17} /></span>
+            <div>
+              <strong>{t("demoModeLabel")}</strong>
+              <span>{t("demoModeDescription")}</span>
+            </div>
+          </aside>
+        ) : null}
 
         <section
           aria-label={t("uploadImages")}
@@ -462,8 +527,8 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        <span>{t("privateManagerFooter")}</span>
-        <span>{t("bearerFooter")}</span>
+        <span>{isDemo ? t("demoFooter") : t("privateManagerFooter")}</span>
+        <span>{isDemo ? t("demoPersistenceFooter") : t("bearerFooter")}</span>
       </footer>
 
       <UploadSheet
@@ -482,6 +547,7 @@ export default function App() {
       />
       <PhoneUploadSheet
         isCreating={phoneSessionCreating}
+        isDemo={isDemo}
         isOpen={phoneUploadOpen}
         onClose={stopPhoneUpload}
         onCopyLink={copyTemporaryUploadLink}

@@ -22,6 +22,7 @@ Goal:
 - protect only the admin Worker with Cloudflare Access;
 - preserve public-by-link image semantics and explain that an exact image URL is a bearer capability;
 - keep Chinese/English UI and light/dark/auto appearance behavior intact.
+- optionally publish the browser-only GitHub Pages showcase from `.github/workflows/pages.yml`; it must remain clearly labeled as non-persistent and must not be used for personal documents.
 
 Safe execution contract:
 - Begin with read-only inspection. List missing `YOUR_*` values and do not invent them.

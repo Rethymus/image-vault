@@ -4,6 +4,10 @@ This is the deterministic runbook for reproducing the Cloudflare private image-l
 
 本文是从本仓库一比一复刻 Cloudflare 图片链接管理器的确定性手册。它要求 Agent 先检查、再验证、再配置，并且只有得到明确授权后才能部署同样的架构。
 
+The repository also contains an optional public GitHub Pages showcase at [rethymus.github.io/image-vault](https://rethymus.github.io/image-vault/). The showcase is intentionally separate from the Cloudflare end state: it is a browser-only build for visual and interaction review, has no persistence, and must not be used with personal documents. See [`github-pages-demo.md`](github-pages-demo.md) for its own acceptance checks.
+
+本仓库还包含一个可选的公开 GitHub Pages 效果展示页：[rethymus.github.io/image-vault](https://rethymus.github.io/image-vault/)。它与 Cloudflare 生产终态分开：只用于审阅视觉和交互，完全在浏览器内运行，没有持久化，不能上传个人敏感文件。它的验收标准见 [`github-pages-demo.md`](github-pages-demo.md)。
+
 ## 0. Give the repository to an Agent / 把仓库交给 Agent
 
 Start with the copyable prompt in [`AGENT_PROMPT.md`](../AGENT_PROMPT.md). The short version is:

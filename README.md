@@ -32,6 +32,16 @@ This is an image workstation for portfolios, README assets, project screenshots,
 - R2：保存图片对象、临时会话和上传标记；
 - 图片链接：随机 token 生成的 public-by-link bearer URL；拿到完整链接的人即可查看。
 
+## GitHub Pages 效果展示 / GitHub Pages showcase
+
+公开仓库同时提供一个不依赖 Cloudflare 的静态演示页：**[打开 GitHub Pages 效果展示](https://rethymus.github.io/image-vault/)**。它完整展示 Vault 工作站的桌面布局、六张概念图、浅色/深色/系统外观、中英切换和二维码手机上传入口。
+
+The public repository also ships a Cloudflare-free static showcase: **[open the GitHub Pages demo](https://rethymus.github.io/image-vault/)**. It demonstrates the workstation layout, all six concept images, light/dark/system appearance, bilingual UI, and the QR phone-upload entry point.
+
+这只是效果展示，不是生产后端：样例图片来自 `public/assets/`；二维码会打开同一个 Pages 站点下的移动端演示页；手机选择的文件只在当前浏览器内预览和模拟接收，不写入 R2、Worker、GitHub 或数据库，也不会跨设备传回桌面端。请不要在公开演示页上传真实证件、未公开简历或其他敏感文件。完整说明见 [`docs/github-pages-demo.md`](docs/github-pages-demo.md)。
+
+This is a UI showcase, not a production backend: sample images come from `public/assets/`; the QR code opens a mobile demo page on the same Pages site; selected phone files are previewed and accepted only in browser memory, with no write to R2, a Worker, GitHub, or a database and no cross-device return to the desktop page. Do not upload real identity documents, unreleased résumés, or other sensitive files. See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for the complete boundary.
+
 ## 架构 / Architecture
 
 ```text

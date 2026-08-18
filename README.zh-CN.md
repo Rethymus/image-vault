@@ -13,6 +13,14 @@
 - React + Vite：管理端界面；
 - `qrcode`：在管理端浏览器里生成二维码。
 
+## GitHub Pages 效果展示（仅演示）
+
+公开仓库提供一个单独的 [GitHub Pages 效果展示页](https://rethymus.github.io/image-vault/)。它不连接 Cloudflare，而是用 `VITE_API_MODE=demo` 构建一个浏览器内演示，完整呈现桌面工作站、六张概念图、浅色/深色/系统外观、中英切换和二维码手机上传流程。
+
+演示页可以选择或拖拽图片、模拟上传进度、打开二维码、从手机进入临时页面并完成本地上传状态；但它没有数据持久化，文件不会上传到 R2、Worker、GitHub 或数据库，也不会从手机跨设备传回桌面端。刷新或关闭页面后演示状态会清除。请不要把真实身份证、证件照原件、未公开简历或其他敏感文件上传到这个公开页面。
+
+静态资源和部署边界见 [`docs/github-pages-demo.md`](docs/github-pages-demo.md)。首次启用仓库 Pages 时，在 `Settings → Pages` 中选择 `GitHub Actions`。
+
 ## 0. 交给 Agent 的复刻入口
 
 如果目标是让 Agent 一比一复刻整个部署，不要只把某个代码文件丢给它。请让它先读取：

@@ -9,6 +9,7 @@ function formatRemaining(seconds) {
 }
 
 export function PhoneUploadSheet({
+  isDemo,
   isOpen,
   isCreating,
   session,
@@ -65,7 +66,7 @@ export function PhoneUploadSheet({
         </div>
 
         <div className="qr-body">
-          <p className="qr-description">{t("phoneUploadDescription")}</p>
+          <p className="qr-description">{t(isDemo ? "demoQrDescription" : "phoneUploadDescription")}</p>
 
           {isCreating ? (
             <div className="qr-loading" aria-live="polite">
@@ -88,7 +89,7 @@ export function PhoneUploadSheet({
                   <span>{t("copyLink")}</span>
                 </button>
               </div>
-              <p className="qr-note"><Icon name="spark" size={15} />{t("qrNote")}</p>
+              <p className="qr-note"><Icon name="spark" size={15} />{t(isDemo ? "demoQrNote" : "qrNote")}</p>
             </>
           ) : session ? (
             <div className="qr-expired" aria-live="polite">
