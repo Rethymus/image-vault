@@ -1583,6 +1583,9 @@ a,
 
 .demo-mobile-shell {
   min-height: 100vh;
+  color: var(--text);
+  background: var(--page);
+  isolation: isolate;
 }
 
 .demo-mobile-topbar {
@@ -1680,6 +1683,7 @@ a,
   text-align: center;
   -webkit-backdrop-filter: blur(24px) saturate(1.3);
   backdrop-filter: blur(24px) saturate(1.3);
+  transition: none;
 }
 
 .demo-mobile-dropzone:hover:not(:disabled),
@@ -1787,6 +1791,15 @@ a,
 .demo-mobile-submit {
   width: 100%;
   margin-top: 22px;
+  transition: none;
+}
+
+.demo-mobile-submit:disabled {
+  color: var(--text-faint);
+  opacity: 1;
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  box-shadow: none;
 }
 
 .demo-upload-success {
@@ -1848,7 +1861,7 @@ a,
   gap: 9px;
   margin-top: 24px;
   padding: 14px 15px;
-  color: var(--text-faint);
+  color: var(--text-soft);
   border: 1px solid var(--border);
   border-radius: 15px;
   background: var(--surface-soft);
