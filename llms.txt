@@ -1,0 +1,43 @@
+# Image Vault
+
+> A bilingual, Apple-inspired personal image workstation: owner-only admin, public-by-link image URLs, temporary QR phone upload, and a browser-only GitHub Pages showcase.
+
+## Give this to an implementation Agent
+
+Copy this one-line request. The Agent reads the remote implementation brief and builds in the user's current workspace; it does not need to clone this repository:
+
+```text
+复刻 Image Vault 图片工作站到当前工作区，先读取并遵守：https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+```
+
+English:
+
+```text
+Reproduce the Image Vault workstation in the current workspace. Read and follow: https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+```
+
+## Required behavior
+
+- `vault-admin`: Cloudflare Access owner-only React/Vite workstation;
+- `vault-upload`: public, token-only, short-lived QR upload Worker;
+- R2 is the private manager's source of truth;
+- all R2 list pages are read, sorted by upload time, and rendered;
+- private counts come from the returned asset array, never mock data;
+- public demo counts come from the current browser array and reset only on refresh;
+- light/dark/system appearance, Chinese/English copy, responsive desktop/mobile UI;
+- no secrets in Vite variables, source files, screenshots, or chat;
+- no cloud mutation before explicit owner approval.
+
+## Read only when needed
+
+- [Remote implementation brief](https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md)
+- [Pitfalls and regression guards](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/pitfalls.md)
+- [Detailed bilingual runbook](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/agent-reproduction.md)
+- [Architecture](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/architecture.md)
+- [Troubleshooting](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/troubleshooting.md)
+- [Chinese README](https://raw.githubusercontent.com/Rethymus/image-vault/main/README.zh-CN.md)
+- [English README](https://raw.githubusercontent.com/Rethymus/image-vault/main/README.en.md)
+
+## Stop conditions
+
+Stop and report missing values before creating a bucket, deploying Workers, changing Access, deleting assets, rotating real links, or requesting secrets. Use disposable images only.

@@ -25,20 +25,22 @@ See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for the asset map a
 
 ## 0. Agent reproduction entrypoint
 
-If the goal is a one-to-one reproduction, do not hand an agent only one source file. Ask it to read these repository entrypoints first:
-
-1. [`AGENTS.md`](AGENTS.md) for safety boundaries, stop conditions, and required checks;
-2. [`AGENT_PROMPT.md`](AGENT_PROMPT.md) for a copyable startup prompt;
-3. this file and [`README.zh-CN.md`](README.zh-CN.md) for the complete bilingual rationale;
-4. [`docs/agent-reproduction.md`](docs/agent-reproduction.md) for the phased runbook, owner-input list, acceptance matrix, and Actions behavior.
-
-The default agent order is:
+You do not need to clone the whole repository first. Give an implementation Agent this one-line request; it reads the remote self-contained brief and builds in the user's current workspace:
 
 ```text
-read-only inspection → identify YOUR_* → local dry-runs → typecheck/build → owner approval → cloud mutation → online acceptance
+Reproduce the Image Vault workstation in the current workspace. Read and follow:
+https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
 ```
 
-The agent must not guess production hosts, bucket names, Access audiences, or owner emails, and must never ask the user to paste secrets into chat or source files.
+The remote brief contains the product contract, Apple-inspired light/dark/system UI requirements, bilingual copy, two-Worker + R2 + Access architecture, API contract, build invariants, safety gates, execution phases, and acceptance matrix. Fetch [`llms.txt`](llms.txt), [`docs/pitfalls.md`](docs/pitfalls.md), or [`docs/agent-reproduction.md`](docs/agent-reproduction.md) only when the current phase needs more detail; do not treat a full repository clone as a prerequisite.
+
+The default order is:
+
+```text
+remote brief → current-workspace inspection → identify YOUR_* → local implementation → dry-runs/browser QA → owner approval → cloud mutation → online acceptance
+```
+
+The Agent must not guess production hosts, bucket names, Access audiences, or owner emails, and must never ask the user to paste secrets into chat or source files. The real failure history and regression guards are in [`docs/pitfalls.md`](docs/pitfalls.md).
 
 ## Workstation screenshots and supporting upload states
 
@@ -235,7 +237,7 @@ Never commit these values, a PAT, a Cloudflare API token, an Access JWT, or a li
 npm run worker:deploy
 ```
 
-The admin Worker serves the Vite build and handles `/api/*`. The production build must use:
+The admin Worker serves the Vite build and handles `/api/*`. Use `npm run build:worker` for this build. It forces Worker API mode, same-origin `/api/*`, and the approved image origin, then rejects a demo bundle. Plain `npm run build` is reserved for the browser-only GitHub Pages showcase. The production values are:
 
 ```text
 VITE_API_MODE=worker
@@ -260,7 +262,7 @@ With no custom domain, do not assume you need a Domains & Routes entry first. Th
 
 ```powershell
 npm run worker:typecheck
-npm run build
+npm run build:worker
 npm run worker:dry-run
 npm run worker:upload:dry-run
 ```
@@ -286,6 +288,8 @@ Variables:
 ```
 
 Use an account-scoped API token with the least permissions required by the deployment. Do not use the Cloudflare Global API Key. Perform the first deployment locally, verify bindings, Access, and the R2 origin, then run Actions manually with `deploy=true`. Forks of the public repository can run the validation job without having your Cloudflare credentials.
+
+The persistence, mock-count, R2 pagination, wrong-origin, duplicate-React-ID, and Actions failures found during the real build are recorded in [`docs/pitfalls.md`](docs/pitfalls.md). Treat that document as a regression checklist when reproducing the project.
 
 ## 7. Temporary QR flow
 
@@ -322,6 +326,8 @@ i/<43-character-asset-token>
 The session token is a temporary upload capability. It is not the image URL capability. Revoking a session stops further uploads; it does not delete already-created image objects.
 
 ## 8. Lessons learned
+
+The full bilingual failure log, root causes, fixes, and regression checks live in [`docs/pitfalls.md`](docs/pitfalls.md). The summary below keeps the key boundaries visible in the README.
 
 ### A private source repository does not make Pages private
 

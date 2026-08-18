@@ -1,62 +1,229 @@
-# Copyable Agent prompt / 可复制的 Agent 指令
+# Image Vault — remote Agent implementation brief
 
-把本仓库交给 Claude Code、Codex、Cursor、Windsurf 或其他能读取仓库并执行终端命令的 Agent 时，可以直接复制下面的指令。它刻意要求 Agent 先诊断和 dry-run，再等待云端变更授权。
+This file is the remote, self-contained implementation brief for the Image Vault workstation. It is intentionally usable without cloning this repository. Give the raw URL to an implementation Agent and ask it to build the workstation in the user's current workspace.
 
-When handing this repository to an implementation agent, paste the following prompt first. It intentionally requires inspection and dry-runs before any cloud mutation.
+本文件是 Image Vault 图片工作站的远程、自包含复刻说明。它不要求 Agent 先克隆本仓库；把 raw URL 直接交给 Agent，它应当在用户当前工作区内完成检查、实现、验证和（得到授权后）部署。
+
+## Copy this to an Agent / 直接复制给 Agent
+
+Chinese:
 
 ```text
-You are reproducing the Cloudflare Private Image Vault from this repository.
+请在当前工作区复刻 Image Vault 图片工作站。先读取这份远程实现说明，再检查当前工作区；不要克隆整个仓库，不要把本仓库当作必须复制的源码目录。按说明从只读检查开始，在本地完成实现和 dry-run；没有得到我对具体云端变更的明确授权，不得创建/删除 R2、部署 Worker、修改 Cloudflare Access、删除真实资源或请求任何 secret。实现完成后逐条执行验收矩阵并报告证据：
+https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+```
 
-Read these files in order before touching code or infrastructure:
-1. AGENTS.md
-2. AGENT_PROMPT.md
-3. README.md
-4. README.zh-CN.md and README.en.md
-5. docs/agent-reproduction.md
-6. docs/architecture.md and docs/troubleshooting.md
+English:
 
-Goal:
-- deploy an owner-only `vault-admin` Worker with a React/Vite workstation;
-- deploy a separate public `vault-upload` Worker that accepts only a short-lived random `/s/<token>` path;
-- store assets and temporary session records in one R2 bucket;
-- protect only the admin Worker with Cloudflare Access;
-- preserve public-by-link image semantics and explain that an exact image URL is a bearer capability;
-- keep Chinese/English UI and light/dark/auto appearance behavior intact.
-- optionally publish the browser-only GitHub Pages showcase from `.github/workflows/pages.yml`; it must remain clearly labeled as non-persistent and must not be used for personal documents.
+```text
+Reproduce the Image Vault image workstation in the current workspace. Read this remote implementation brief first, then inspect the current workspace; do not clone the whole repository or treat it as a source directory that must be copied. Start read-only, implement locally, and run dry-runs. Do not create/delete R2 resources, deploy Workers, change Cloudflare Access, delete real assets, or request any secret until I explicitly approve that exact cloud-mutation phase. Finish with the acceptance matrix and evidence:
+https://raw.githubusercontent.com/Rethymus/image-vault/main/AGENT_PROMPT.md
+```
 
-Safe execution contract:
-- Begin with read-only inspection. List missing `YOUR_*` values and do not invent them.
-- Run local validation and both Wrangler dry-runs before asking for deployment approval.
-- Never ask me to paste Cloudflare API tokens, GitHub PATs, Access JWTs, R2 credentials, or owner secrets into chat or source files.
-- Do not create/delete buckets, deploy Workers, modify Access policies, delete assets, or rotate real links until I explicitly approve that exact phase.
-- Never put a secret in a `VITE_*` variable or committed file.
-- Never put the public upload Worker behind the owner-only Access application.
-- Never test with a real identity document; use a disposable sample image.
+## Mission / 目标
 
-Required local checks:
+Build a working personal image workstation, not only a visual mockup:
+
+- an owner-only `vault-admin` Cloudflare Worker with a React/Vite workstation;
+- a separate public `vault-upload` Worker for short-lived phone upload sessions;
+- one Cloudflare R2 bucket for image objects and temporary session records;
+- Cloudflare Access on the admin Worker only;
+- random bearer URLs that can be embedded directly in Markdown or HTML;
+- Chinese/English switching, light/dark/system appearance, responsive desktop and phone layouts;
+- drag-and-drop upload, image preview, copy URL/HTML/Markdown, delete, and rotate-link actions;
+- a QR sheet in the admin workstation and a no-login tokenized phone page;
+- a clearly labelled browser-only GitHub Pages showcase with no persistence.
+
+不要只实现一个看起来相似的页面。最终必须同时具备真实的管理 API、R2 持久化、临时二维码上传、安全边界、验收测试和清晰的演示/生产区分。
+
+## Product contract / 产品契约
+
+### Admin workstation
+
+The primary surface is a calm Apple-inspired workstation rather than a QR-only page:
+
+- top bar with Vault identity, language switch, appearance switch, QR upload entry, and Add images;
+- resource count is derived from the current asset array, never a hard-coded number;
+- the main grid shows every resource returned by the data source, not only the first 12;
+- cards show image, name, type, size, date, copy action, and an action menu;
+- upload supports JPG/PNG/WebP, drag-and-drop, queue progress, metadata options, and clear errors;
+- dark mode must cover the whole shell, cards, sheets, controls, QR panel, and phone view;
+- phone layouts use the same responsive rules and do not horizontally overflow;
+- all visible user-facing strings have Chinese and English translations.
+
+### Persistent private mode
+
+The private manager is the source of truth for real use:
+
+```text
+GET    /api/assets                         list every R2 asset
+POST   /api/assets                         validate and persist one image
+DELETE /api/assets/<43-char-token>         delete the R2 object
+POST   /api/assets/<token>/rotate           copy to a new token and delete old object
+POST   /api/upload-sessions                create a temporary phone session
+DELETE /api/upload-sessions/<token>        revoke that session
+```
+
+The Worker must list all R2 pages (`truncated`/`cursor`), sort by actual upload time, and return real metadata and URLs. The UI must initialize from `GET /api/assets`; it must not seed conceptual images, keep a fake `remoteCount`, or slice the list to 12. After upload, refresh, and delete, R2 must remain the source of truth.
+
+The public image URL is built from the owner-provided `PUBLIC_IMAGE_ORIGIN` and has this shape:
+
+```text
+https://<approved-r2-origin>/i/<43-character-random-token>
+```
+
+Do not fall back to `img.example.com` or another demo origin in a production Worker build.
+
+### Temporary phone upload
+
+The phone Worker is intentionally outside Access:
+
+- only `/s/<43-character-random-session-token>` is meaningful;
+- the root may return 404;
+- sessions expire after about 10 minutes and allow at most 5 images;
+- accept only JPEG, PNG, and WebP with matching file signatures and an 8 MiB limit;
+- revoke must stop further uploads and return 410 for the old session;
+- an uploaded image remains a normal bearer URL until the owner deletes or rotates it;
+- the phone Worker has no list, delete, or admin endpoint.
+
+Putting Access on the upload Worker breaks the QR use case because an unauthenticated phone would be forced to sign in.
+
+### Public GitHub Pages showcase
+
+The Pages build is a browser-only showcase:
+
+- build it with `VITE_API_MODE=demo` and the Pages base path;
+- seed only the documentation images shipped for the showcase;
+- count `assets.length` and render the complete current array;
+- upload/delete update the current browser session, so the count and cards stay consistent;
+- refreshing the Pages demo resets it to the seed state by design;
+- never present the demo as R2-backed or suitable for personal documents.
+
+## Architecture / 架构
+
+```text
+Owner browser ── Cloudflare Access ──▶ vault-admin Worker
+                                      ├── React/Vite static assets
+                                      ├── authenticated /api/*
+                                      └── R2 binding
+
+Phone browser ── token only ─────────▶ vault-upload Worker
+                                      └── same R2 bucket, no admin API
+
+Public image URL ────────────────────▶ approved R2 public origin /i/<token>
+```
+
+The admin Worker may serve the static UI through a Worker Assets binding. The public Pages showcase is a separate demo deployment and must not be used as the private manager.
+
+## Build invariants / 构建不变量
+
+When a Worker is built, the build command must force and verify:
+
+```text
+VITE_API_MODE=worker
+VITE_API_BASE_URL=             # same-origin /api/*
+VITE_PUBLIC_IMAGE_ORIGIN=<approved origin or explicit placeholder>
+```
+
+Use a dedicated `build:worker` command. It must fail if the bundle still contains the demo API mode or `https://img.example.com`; the approved image origin must also be passed consistently to the Worker runtime variables and verified by the Wrangler dry-run. GitHub Actions must run this Worker build before Wrangler uploads `dist`; a plain browser demo build must never be used for the admin Worker.
+
+## Safety contract / 安全边界
+
+1. Read this remote brief before modifying the current workspace.
+2. Do not clone this repository unless the user explicitly asks for source comparison. The brief is the implementation input; use the current workspace as the destination.
+3. Inspect first. List missing `YOUR_*` values and ambiguous decisions before cloud changes.
+4. Never invent an account ID, bucket, Worker name, Access audience, owner email, R2 origin, or production URL.
+5. Never ask the user to paste a Cloudflare API token, GitHub PAT, Access JWT, R2 credential, QR token, or other secret into chat or source files.
+6. Never put credentials in `VITE_*`, committed files, screenshots, or logs.
+7. Do not create/delete R2, deploy, change Access, delete real assets, or rotate real URLs without explicit approval for that exact phase.
+8. Use disposable sample images only. Never test with an identity document or real résumé.
+9. Treat a complete image URL as bearer access. Randomness prevents enumeration; it does not prevent forwarding.
+10. Stop on the first failed validation step and report the smallest safe repair.
+
+## Execution protocol / 执行协议
+
+### Phase 0 — Remote brief and read-only discovery
+
+- Read this file only; follow linked documents only when the current phase needs them.
+- Inspect the current workspace, existing framework, package manager, Git status, and available Cloudflare/Wrangler tools.
+- Decide whether to scaffold a fresh app or adapt an existing app.
+- List owner inputs and stop before cloud mutation.
+
+### Phase 1 — Local implementation
+
+- Implement the workstation and the two Worker routes in the current workspace.
+- Add the bilingual copy, light/dark/system tokens, responsive states, and safe demo boundary.
+- Add `build:worker`, type checking, local preview, and tests for the state transitions.
+- Confirm that private mode contains no seed/mock assets and that public demo mode is explicitly non-persistent.
+
+### Phase 2 — Local validation and dry-run
+
+Run the equivalent checks available in the workspace:
+
 ```powershell
 npm ci
 npm run worker:types
 npm run worker:typecheck
-npm run build
+npm run build:worker
 npm run worker:upload:dry-run
 npm run worker:dry-run
 ```
 
-When validation is complete, report:
-- files and placeholders inspected;
-- checks that passed and any first failure;
-- Cloudflare inputs still needed;
-- the exact next mutation command, but do not run it until I approve it.
+For the Pages showcase, separately run the demo build with `VITE_API_MODE=demo` and the correct base path. Use a real browser test for blank-page, console errors, desktop, mobile, upload, delete, and count consistency.
 
-After approved deployment, run the acceptance matrix in `docs/agent-reproduction.md`, including anonymous admin blocking, public upload root 404, valid QR upload, invalid-file rejection, session revoke 410, workstation refresh, and a secret/build scan.
-```
+### Phase 3 — Explicit cloud approval
 
-## What a good Agent response should contain / 合格的 Agent 输出应包含
+Report the exact commands and resources that will be changed. Wait for approval before creating a bucket, writing secrets, deploying a Worker, configuring Access, or deleting a test object.
 
-- a short discovery report before changes;
-- an explicit list of missing owner inputs;
-- command output summarized by phase, not hidden behind “done”;
-- a clear distinction between local validation and cloud mutation;
-- a final acceptance matrix with pass/fail evidence;
-- no copied secret, live QR token, or personal asset in the patch.
+### Phase 4 — Deployment
+
+- create or select one R2 bucket;
+- bind the same bucket to both Workers;
+- deploy the public phone Worker without Access;
+- set admin Worker secrets through Wrangler/Cloudflare secret storage;
+- deploy the admin Worker with the verified Worker build;
+- configure Access for the admin Worker only;
+- keep GitHub Actions validation separate from optional deployment.
+
+### Phase 5 — Acceptance
+
+Use a disposable image and record evidence for every row:
+
+| Check | Expected result |
+| --- | --- |
+| anonymous admin | Access redirect/denial, no asset data |
+| upload Worker root | 404 is acceptable and intentional |
+| valid QR session | opens without owner login |
+| valid JPG/PNG/WebP | accepted within 8 MiB |
+| wrong signature/type/size | rejected |
+| session revoke | old URL returns 410 |
+| private upload | card appears, URL opens, survives refresh |
+| private delete | API returns 204 and remains gone after refresh |
+| private list | count equals returned assets and includes all pages |
+| public demo | count/card transition is 6 → 7 → 6 in one session |
+| public mobile | no horizontal overflow and no console errors |
+| build scan | no demo API mode or demo origin in Worker bundle |
+
+## Required final report / Agent 最终报告
+
+Return a compact evidence report containing:
+
+- what was discovered and whether the workspace was scaffolded or adapted;
+- owner inputs still missing, without printing their values;
+- files changed and why;
+- local checks and their results;
+- cloud mutations and their exact targets, only if approved;
+- online acceptance results and known limitations;
+- a clear distinction between persisted private assets and non-persistent Pages demo state.
+
+Do not end with “done” if the private authenticated flow was not tested. State that boundary explicitly.
+
+## Additional remote references / 按需读取的补充文档
+
+These are optional follow-up documents. Fetch only the one needed for the current phase; do not clone the repository:
+
+- [`llms.txt`](https://raw.githubusercontent.com/Rethymus/image-vault/main/llms.txt) — short machine-readable index;
+- [`docs/pitfalls.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/pitfalls.md) — failures found while building this project and regression guards;
+- [`docs/agent-reproduction.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/agent-reproduction.md) — detailed bilingual runbook;
+- [`docs/architecture.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/architecture.md) — architecture notes;
+- [`docs/troubleshooting.md`](https://raw.githubusercontent.com/Rethymus/image-vault/main/docs/troubleshooting.md) — symptom-based troubleshooting.
