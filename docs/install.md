@@ -101,10 +101,13 @@ The admin Worker polls for completed uploads. Revoking a QR session invalidates 
 
 The Pages build is separate from the Worker build. It may contain the six documentation images and browser-only simulated uploads, but it must:
 
+- be published at a live URL that visitors can use without installation, sign-in, configuration, or commands;
 - derive its displayed count from the current browser array;
 - render the complete current array;
+- make upload, copy, demo URL rotation, delete, appearance, language, QR, direct mobile-page entry, and mobile completion visibly interactive;
 - show a clear “demo only / no persistence” notice;
 - reset its local state on refresh;
+- include a README GIF or recording of the complete primary flow instead of substituting a checklist;
 - never send files to R2, a Worker, GitHub, or a database;
 - never contain production image URLs, Access credentials, tokens, or sensitive assets.
 

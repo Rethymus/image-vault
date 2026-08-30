@@ -6,7 +6,7 @@
 
 管理端私有 · 图片按完整链接公开 · 随机不可枚举 URL · 临时二维码手机上传
 
-[快速开始](#0-交给-agent-的安装与更新入口) · [English guide](README.en.md) · [GitHub Pages 演示](https://rethymus.github.io/image-vault/)
+[立即体验在线演示](https://rethymus.github.io/image-vault/) · [English guide](README.en.md) · [辅助复刻](#0-交给-agent-的安装与更新入口)
 
 </div>
 
@@ -29,11 +29,19 @@
 
 ## GitHub Pages 效果展示（仅演示）
 
-公开仓库提供一个单独的 [GitHub Pages 效果展示页](https://rethymus.github.io/image-vault/)。它不连接 Cloudflare，而是用 `VITE_API_MODE=demo` 构建一个浏览器内演示，完整呈现桌面工作站、六张概念图、浅色/深色/系统外观、中英切换和二维码手机上传流程。
+### [▶ 直接打开在线演示](https://rethymus.github.io/image-vault/)
 
-演示页可以选择或拖拽图片、模拟上传进度、打开二维码、从手机进入临时页面并完成本地上传状态；但它没有数据持久化，文件不会上传到 R2、Worker、GitHub 或数据库，也不会从手机跨设备传回桌面端。刷新或关闭页面后演示状态会清除。请不要把真实身份证、证件照原件、未公开简历或其他敏感文件上传到这个公开页面。
+这个链接面向普通访客，**不需要安装、不需要登录、不需要配置，也不需要执行任何命令**。打开后可以直接选择或拖拽图片，看到资源数量随上传和删除从 `6 → 7 → 6` 变化，使用复制与 URL 轮换，切换浅色/深色/系统外观和中英文，并生成二维码或直接打开手机端上传页面。
 
-静态资源和部署边界见 [`docs/github-pages-demo.md`](docs/github-pages-demo.md)。首次启用仓库 Pages 时，在 `Settings → Pages` 中选择 `GitHub Actions`。
+<div align="center">
+  <a href="https://rethymus.github.io/image-vault/">
+    <img src="docs/assets/demo/image-vault-pages-demo.gif" width="960" alt="Image Vault GitHub Pages 完整交互演示" />
+  </a>
+</div>
+
+这段 GIF 来自真实页面，完整走过实际主流程，而不是用文字步骤代替展示。演示页没有服务端持久化：文件不会上传到 R2、Worker、GitHub 或数据库，也不会从另一台手机跨设备传回桌面端；刷新或关闭页面后会恢复为六张样例图。请不要上传真实身份证、证件照原件、未公开简历或其他敏感文件。
+
+静态资源、限制和维护者重新发布说明见 [`docs/github-pages-demo.md`](docs/github-pages-demo.md)。普通访客不需要阅读部署说明。
 
 ## 0. 交给 Agent 的安装与更新入口
 

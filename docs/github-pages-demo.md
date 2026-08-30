@@ -6,6 +6,22 @@
 
 This page is the reproducible public showcase for the repository. It demonstrates the full Vault workstation, all six concept-card images, light/dark appearance, Chinese/English switching, and the QR phone-upload flow on GitHub Pages. It is not the production image host and does not connect to the Cloudflare Worker, R2, or Access environment.
 
+## 直接使用 / Use it directly
+
+普通访客只需要打开 [在线演示](https://rethymus.github.io/image-vault/)：无需安装、登录、配置或执行命令。页面发布产物已经托管在 GitHub Pages 上，上传、计数、详情、复制、URL 轮换、删除、主题、语言、二维码和手机上传页面都能直接操作。
+
+Ordinary visitors only need to open the [live demo](https://rethymus.github.io/image-vault/). No installation, sign-in, configuration, or commands are required. The built site is already hosted on GitHub Pages, and its upload, count, details, copy, URL rotation, delete, appearance, language, QR, and mobile-upload interactions are immediately usable.
+
+<div align="center">
+  <a href="https://rethymus.github.io/image-vault/">
+    <img src="assets/demo/image-vault-pages-demo.gif" width="960" alt="Image Vault complete GitHub Pages demo" />
+  </a>
+</div>
+
+这段 GIF 由真实浏览器页面生成，完整走过主流程；它不是文字步骤或概念拼图。
+
+This GIF was captured from the working browser UI and walks through the complete primary flow; it is not a textual checklist or concept montage.
+
 ## 演示页能做什么 / What the showcase can do
 
 - 展示概念图中的六张独立样例图，并通过 `public/assets/` 以 Pages 静态资源方式加载；
@@ -13,6 +29,7 @@ This page is the reproducible public showcase for the repository. It demonstrate
 - 在当前浏览器内模拟上传进度、复制、删除、链接轮换和详情面板；
 - 使用系统、浅色、深色三种外观选择，并在中文/英文之间切换；
 - 点击“手机上传”生成 10 分钟有效的演示二维码；
+- 不扫码时可点击“打开手机端演示”，直接进入同一移动页面；
 - 用手机或另一浏览器打开二维码地址，选择最多 3 张图片，完成一次移动端上传演示；
 - 在手机上传页直接显示“无持久化”提示，避免把演示流程误认为生产通道。
 
@@ -21,6 +38,7 @@ This page is the reproducible public showcase for the repository. It demonstrate
 - Simulates upload progress, copy, delete, URL rotation, and detail states in the current browser;
 - Supports system, light, and dark appearance plus Chinese/English switching;
 - Generates a 10-minute demo QR code from the “Phone upload” action;
+- Offers an “Open mobile demo” action for entering the same mobile page without scanning;
 - Opens a mobile upload page from the QR URL and accepts up to three files for the interaction demo;
 - Places the no-persistence warning directly in the mobile flow so the demo is not mistaken for production.
 
@@ -61,7 +79,11 @@ Demo uploads exist only in the current page memory and temporary `blob:` preview
 
 All six images ship with the public repository and do not depend on R2 or an external image origin. The Pages screenshot and interaction demo therefore remain complete even when Cloudflare is not configured.
 
-## 部署方式 / Deployment
+## 维护者重新发布说明 / Maintainer republishing notes
+
+以下内容只面向仓库维护者。访问在线演示的普通用户不需要安装依赖、修改 GitHub 设置或运行这些步骤。
+
+The following notes are only for repository maintainers. Visitors using the live demo do not need to install dependencies, change GitHub settings, or run these steps.
 
 `.github/workflows/pages.yml` 使用 GitHub 官方 Pages artifact 部署流程：
 
@@ -84,8 +106,10 @@ For the first enablement, set `Settings → Pages` to use `GitHub Actions` as th
 - [ ] 切换中文、英文后，桌面端和手机端文案都同步；
 - [ ] 浅色、深色和系统外观都能切换；
 - [ ] “手机上传”能生成二维码和可复制 URL；
+- [ ] 可以点击“打开手机端演示”直接进入移动页；
 - [ ] 二维码 URL 能打开移动端上传页；
 - [ ] 移动端选择图片后能显示预览、数量、限制和完成状态；
+- [ ] 演示 URL 轮换后，详情面板中的 URL 确实发生变化；
 - [ ] 页面明确提示刷新/关闭后不会持久化；
 - [ ] 没有把真实 Cloudflare secret、生产 QR token 或个人文件提交到公开仓库。
 

@@ -90,6 +90,12 @@ export function PhoneUploadSheet({
                 </button>
               </div>
               <p className="qr-note"><Icon name="spark" size={15} />{t(isDemo ? "demoQrNote" : "qrNote")}</p>
+              {isDemo ? (
+                <a className="button button-primary qr-demo-open" href={session.uploadUrl} rel="noreferrer" target="_blank">
+                  <span>{t("openMobileDemo")}</span>
+                  <Icon name="arrow" size={16} />
+                </a>
+              ) : null}
             </>
           ) : session ? (
             <div className="qr-expired" aria-live="polite">

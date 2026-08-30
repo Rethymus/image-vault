@@ -2,6 +2,7 @@
 
 ## Unreleased — Agent reproduction hardening
 
+- Turned the GitHub Pages showcase into an explicitly one-click visitor experience, fixed observable demo URL rotation, added direct mobile-demo entry, and embedded a browser-captured full-flow GIF in every README entrypoint.
 - Added a remote-first, self-contained [`AGENT_PROMPT.md`](AGENT_PROMPT.md) so an implementation Agent can reproduce the workstation in the current workspace without cloning the repository.
 - Added [`llms.txt`](llms.txt) as a short machine-readable entrypoint and [`docs/pitfalls.md`](docs/pitfalls.md) as a bilingual failure log and regression checklist.
 - Added a dedicated `build:worker` guard so the persistent admin Worker cannot accidentally be published from the browser-only demo build.
@@ -11,6 +12,7 @@
 
 ## 未发布版本 — Agent 复刻加固
 
+- 将 GitHub Pages 展示明确改为访客点开即用，修复演示 URL 轮换的真实状态变化，增加直接进入手机演示的入口，并在各 README 入口嵌入真实浏览器主流程 GIF。
 - 新增自包含远程 [`AGENT_PROMPT.md`](AGENT_PROMPT.md)，Agent 无需先克隆整个仓库即可在当前工作区复刻工作站。
 - 新增 [`llms.txt`](llms.txt) 机器友好入口和 [`docs/pitfalls.md`](docs/pitfalls.md) 双语踩坑记录与回归清单。
 - 新增 `build:worker` 构建防线，避免把只用于浏览器演示的 demo 构建误发布到持久化管理 Worker。
