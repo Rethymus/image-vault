@@ -890,6 +890,12 @@ a,
   color: var(--accent);
 }
 
+.qr-demo-open {
+  width: 100%;
+  margin-top: 15px;
+  text-decoration: none;
+}
+
 .qr-loading,
 .qr-expired,
 .qr-empty {

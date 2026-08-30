@@ -89,6 +89,19 @@ function assetSnippet(asset, format) {
   return asset.url;
 }
 
+function createRotatedDemoUrl(asset) {
+  const token = createToken().slice(0, 18);
+  const source = asset.url || asset.image;
+
+  if (source.startsWith("blob:")) {
+    return `${source.split("#")[0]}#vault=${token}`;
+  }
+
+  const nextUrl = new URL(source, window.location.href);
+  nextUrl.searchParams.set("vault", token);
+  return nextUrl.toString();
+}
+
 function humanError(error, t) {
   const message = error instanceof Error ? error.message : String(error);
   if (message.includes("File type")) return t("onlySupportedFiles");
@@ -352,7 +365,7 @@ export default function App() {
     try {
       const updated = isRemote
         ? await rotateRemoteAsset(asset.id)
-        : { ...asset, url: asset.local ? asset.image : asset.url };
+        : { ...asset, url: createRotatedDemoUrl(asset) };
       setAssets((current) => current.map((candidate) => candidate.id === asset.id ? { ...candidate, ...updated } : candidate));
       setSelectedAsset((current) => current?.id === asset.id ? { ...current, ...updated } : current);
       setMenuId(null);
@@ -475,7 +488,7 @@ export default function App() {
         >
           <span className="dropzone-icon"><Icon name="upload" size={35} strokeWidth={1.45} /></span>
           <strong>{t("dropImages")}</strong>
-          <span>or <button className="inline-link" onClick={(event) => { event.stopPropagation(); openUpload(); }} type="button">{t("chooseFilesFromDevice")}</button></span>
+          <span>{t("chooseFilesConnector")} <button className="inline-link" onClick={(event) => { event.stopPropagation(); openUpload(); }} type="button">{t("chooseFilesFromDevice")}</button></span>
         </section>
         <input
           ref={fileInputRef}

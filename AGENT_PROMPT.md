@@ -90,11 +90,15 @@ Putting Access on the upload Worker breaks the QR use case because an unauthenti
 
 The Pages build is a browser-only showcase:
 
+- publish a live URL that ordinary visitors can open and use without installing, configuring, signing in, or running commands;
 - build it with `VITE_API_MODE=demo` and the Pages base path;
 - seed only the documentation images shipped for the showcase;
 - count `assets.length` and render the complete current array;
 - upload/delete update the current browser session, so the count and cards stay consistent;
+- copy and demo URL rotation must change observable UI state rather than only showing a success toast;
+- QR generation must open a working mobile page, with a direct mobile-demo link for visitors who are not scanning;
 - refreshing the Pages demo resets it to the seed state by design;
+- include a README GIF or recording captured from the complete working primary flow; a timed checklist is not a demo artifact;
 - never present the demo as R2-backed or suitable for personal documents.
 
 ## Architecture / 架构

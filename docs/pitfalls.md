@@ -267,12 +267,36 @@ Keep one canonical placeholder and use it consistently in the build step, dry-ru
 
 构建、dry-run 和部署步骤必须统一使用同一个安全占位符。由专用构建脚本负责 `VITE_API_MODE` 时，不要在 workflow 中重复覆盖。不能只测试本地默认值，还要测试 Action 的完整环境变量组合。
 
+## 14. A checklist is not a live demo
+
+### Symptom / 症状
+
+Documentation presented a short timed path or a command sequence as the demo, while visitors still had to install, configure, or infer how to run the page.
+
+文档把限时操作清单或命令序列当成演示，但访客仍要安装、配置，或者自行猜测如何启动页面。
+
+### Root cause / 根因
+
+The implementation instructions were mistaken for the user-facing artifact. A reproduction guide helps maintainers build the site; it does not replace a deployed, clickable experience or a recording of the working flow.
+
+把实现说明误当成了面向用户的展示。复刻手册可以帮助维护者构建站点，但不能替代已经部署、可以点击使用的页面，也不能替代真实主流程录屏。
+
+### Guard / 防线
+
+Publish the Pages URL before claiming the demo is ready. Visitors must need only one click—no installation, sign-in, setup, or commands. Browser-test the complete flow and embed a GIF or recording captured from that working deployment in the README.
+
+只有 Pages 链接已经发布后才能宣称演示完成。访客应当只需点击一次，不需要安装、登录、配置或命令。必须用浏览器验收完整流程，并把实际页面生成的 GIF 或录屏嵌入 README。
+
 ## Regression checklist / 回归清单
 
 - [ ] Worker bundle forces `worker` API mode and contains the approved image origin.
 - [ ] Private list reads every R2 page and renders every returned asset.
 - [ ] Private count is `assets.length`; there is no mock counter or seed fallback.
 - [ ] Public demo count/card transition is `6 → 7 → 6` in one browser session.
+- [ ] Public Pages URL opens without visitor installation, sign-in, configuration, or commands.
+- [ ] Public demo URL rotation changes the URL shown in the detail panel.
+- [ ] Public demo QR sheet includes a working direct link to the mobile page.
+- [ ] README embeds a GIF or recording captured from the complete working flow.
 - [ ] Public demo resets only after refresh and is labelled non-persistent.
 - [ ] QR Worker is outside Access; admin Worker remains owner-only.
 - [ ] Root upload Worker 404 is treated as expected.

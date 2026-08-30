@@ -64,7 +64,7 @@ npm run worker:upload:dry-run
 npm run worker:dry-run
 ```
 
-For the separate GitHub Pages showcase, run `npm run build` with `VITE_API_MODE=demo` and the Pages base path; never reuse that demo build for the admin Worker.
+For the separate GitHub Pages showcase, run `npm run build` with `VITE_API_MODE=demo` and the Pages base path; never reuse that demo build for the admin Worker. The deployed Pages URL must be immediately usable by visitors without installation, sign-in, configuration, or commands. Validate `6 → 7 → 6` count consistency, observable demo URL rotation, QR generation, direct mobile-page entry, and the complete README GIF/recording.
 
 After an approved deployment, verify the acceptance matrix in `docs/agent-reproduction.md`: Access blocks anonymous admin traffic, the public root is 404, a valid QR session works without login, unsupported/oversized files are rejected, revocation returns 410, and uploaded assets appear in the admin workstation.
 

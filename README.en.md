@@ -6,7 +6,7 @@
 
 Owner-only admin · public-by-link images · unguessable URLs · short-lived QR phone upload
 
-[Quick start](#0-agent-installation-and-update-entrypoints) · [中文说明](README.zh-CN.md) · [GitHub Pages showcase](https://rethymus.github.io/image-vault/)
+[Try the live demo](https://rethymus.github.io/image-vault/) · [中文说明](README.zh-CN.md) · [Assisted reproduction](#0-agent-installation-and-update-entrypoints)
 
 </div>
 
@@ -31,11 +31,19 @@ The stack is:
 
 ## GitHub Pages showcase (demo only)
 
-The public repository includes a separate [GitHub Pages showcase](https://rethymus.github.io/image-vault/). It does not connect to Cloudflare. Instead, it builds with `VITE_API_MODE=demo` and presents the workstation, all six concept images, light/dark/system appearance, bilingual UI, and the QR phone-upload flow entirely in the browser.
+### [▶ Open the live demo](https://rethymus.github.io/image-vault/)
 
-The showcase supports file selection or drag-and-drop, simulated upload progress, QR generation, a mobile upload page, and a completed local upload state. It has no persistence: files are not sent to R2, a Worker, GitHub, or a database, and they are not transferred back from the phone to the desktop across devices. Refreshing or closing the page clears the demo state. Do not upload a real identity document, original ID photo, unreleased résumé, or other sensitive file to this public page.
+The live link is for ordinary visitors: **no installation, sign-in, configuration, or commands are required**. Open it and immediately select or drag in an image, watch the real list and count move through `6 → 7 → 6`, copy or rotate a demo URL, delete the upload, switch light/dark/system appearance and language, generate a QR code, or open the mobile upload page directly.
 
-See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for the asset map and deployment boundary. On first setup, choose `GitHub Actions` under `Settings → Pages`.
+<div align="center">
+  <a href="https://rethymus.github.io/image-vault/">
+    <img src="docs/assets/demo/image-vault-pages-demo.gif" width="960" alt="Complete Image Vault GitHub Pages interaction demo" />
+  </a>
+</div>
+
+The GIF comes from the working page and walks through the complete primary flow instead of replacing the demonstration with written instructions. The showcase has no server-side persistence: files are not sent to R2, a Worker, GitHub, or a database, and another phone cannot transfer its selected files back to the desktop page. Refreshing or closing restores the six sample assets. Do not use a real identity document, original ID photo, unreleased résumé, or another sensitive file.
+
+See [`docs/github-pages-demo.md`](docs/github-pages-demo.md) for assets, limitations, and maintainer republishing notes. Ordinary visitors do not need the deployment instructions.
 
 ## 0. Agent installation and update entrypoints
 
